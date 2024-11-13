@@ -1,0 +1,26 @@
+div{
+background-color: black;
+width: 500px;
+height: 500px;
+animation-name: demo;
+animation-duration: 5s;
+left: 100px;
+position: relative;
+}
+@keyframes demo {
+    from{
+        background-color: black;
+        left: 100px;
+        top: 0px;
+      
+
+    }
+    to{
+        background-color: brown;
+        left: 100px;
+        top: 200px;
+       
+
+    }
+}
+
