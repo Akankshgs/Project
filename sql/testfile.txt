@@ -1,0 +1,4635 @@
+1. DDL(data definition language)
+--------------------------------------------
+> create
+>alter
+>drop
+>truncate
+
+2. DML(data Manipulation language)
+---------------------------------------------
+> insert
+> update
+> delete
+
+3. TCL(transaction control language)
+---------------------------------------------
+> commit
+> savepoint
+> rollback
+
+4. DCL (data control language)
+---------------------------------------------
+> grant
+> revoke
+
+5.DQL(data query language)
+---------------------------------------------
+>select
+>projection
+>selection
+>joins
+
+
+
+
+
+to create database in MySQL
+************************************************
+>create database demo;
+Syntax: 
+
+to access the database
+************************************************
+>use database name;
+>use demo;
+
+to display the database available in MySQL
+**************************************************
+>show databases;
+
+to display the tables that are in the database
+**************************************************
+> show tables;
+
+
+DDL(Data definition language)
+*************************************************************
+create: this command is used to create the database objects such as tables, relations, procedures, triggers, views etc...
+
+syntax:
+create table table_name(
+column name1 datatype constraint,
+column name2 datatype constraint,
+:
+column name_n datatype constraint
+);
+
+
+create table accounts(
+accno bigint primary key,
+acc_holdername varchar(20) not null,
+phone bigint unique not null,
+pincode int
+);
+
+create table branch(
+b_id int primary key,
+b_name varchar(20) unique,
+pincode int
+);
+
+
+ create table loaction(
+ pincode int primary key,
+ area varchar(20) unique,
+ city varchar(20) not null,
+ state varchar(20) default 'karnataka'
+ );
+ ****************************************************************
+alter table table_name
+add column_name datatype constraints after existing column name;
+
+to add a column after a certain column,
+*******************************************************************
+requirement 1:  to add the mail_id  column inside accounts table
+alter table accounts
+add mail_id varchar(30) unique;
+
+requirement 2: to add the ifsc code column in branch table
+alter table accounts
+add ifsc_code varchar(20);
+
+ TO remove a column
+*****************************************************
+alter table tablename
+drop columnname;
+
+requirement: to remove the mailid column from accounts table
+****************************************************************
+alter table accounts
+drop mailid;
+
+requirement 2: to remove the bname column from branch table
+***************************************************************
+alter table branch
+drop bname;
+
+
+to modify datatype of a column
+****************************************************************
+alter table tablename
+modify columnname new datatype constraint;
+
+requirement : to modify acc_holder name column datatype to char datatype
+alter table accounts 
+modify acc_holdername char(20) not null;
+
+requirement 2: to modify ifsc code from varchar to bigint
+*********************************************************************
+alter table branch
+modify ifsc_code bigint;
+
+requirement 3 : to modify the null/not
+*********************************************************************
+alter table table_name
+modify column _name existing datatype null/notnull
+
+changing phoneno to null
+***************************************************
+alter table accounts
+modify phone bigint null;
+
+changing area to not null from location table
+****************************************************
+alter table location
+modify area varchar(20) not null;
+
+
+
+
+
+
+requirement 5: to change tablename
+***********************************************
+alter table table_name
+rename new_table_name;
+
+alter table accounts
+rename acc;
+
+
+requirement 6: to column name
+*********************************************************
+ALTER TABLE TABLE_NAME
+CHANGE OLD_COL_NAME NEW_COL_NAME EXISTING DATATYPE;
+ 
+ALTER TABLE acc
+CHANGE acc_holdername name char(20);
+
+requirement 7: to add the constraints
+**********************************************************
+alter table table_name
+add constraint primary key(column_name);
+ADD CONSTRAINT UNIQUE(COLUMN_NAME);
+ADD CONSTRAINT CHECK(CONDITION);
+ADD CONSTRAINT FOREIGN KEY(COLUMN_NAME) REFERNCES PARENT_TALE(COLUMN_TABLE);
+
+
+alter table acc
+add constraint foreign key(pincode) refernces location(picode);
+
+8.to remove primary key
+********************************************************************
+alter table table_name
+drop primary key;
+
+alter table acc
+drop primary key;
+
+9. to remove unique constraint
+******************************************************************************
+alter table table_name
+drop index column-name;
+
+alter table acc
+drop index phone;
+
+
+
+
+10.to remove check and foreign key constraints
+**************************************************************
+
+alter table table_name
+drop constraint constraint_name;
+==========================================================================================================================================================================================
+
+1.accessing information_schema;
+****************************************
+use information_schema;
+
+2.display in tables
+*******************************************
+show tables;
+
+
+3.descirbe table constraints
+***********************************************
+desc table_constraints;
+
+ there is  a column know as constraint_name and that is where all our constraint anme will be stored.
+
+
+4.execute a Dql query to retrive the data or constraint_name
+************************************************************************************************
+select * from table_constraints
+where table_name='provide your table_name';
+
+note:table_name is a column present in table constraints.
+
+
+5.the constraint names will be  obtained.copy the constraint name and come back to demo database
+*************************************************************************************************************
+use demo;
+
+6.execute the alter command by providing the copied constraint_name
+********************************************************************************************************
+alter table acc
+drop constraint acc_idfk_1;
+
+
+==============================================================================================================================================================================
+DML(DATA MANIPULATION LANGUAGE)
+****************************************************************
+
+INSERT : INSERT COMMAND IS USED TO ADD AA RECORD INSIDE THE TABLE.
+
+SYNTAX 1: 
+---------
+INSERT INTO TABLE_NAME VALUES(V1,V2,...,Vn)(V1,V2,..,Vn),....
+
+
+SYNTAX 2: 
+---------
+INSERT INTO TABEL_NAME VALUES(COL1,COL2,...,COLn)VALUES(V1,V2,...,Vn),..
+
+ INSERT INTO ACC VALUES (1,'AKANKSH',7899881219,573103,'akankshashi@gmail.com');
+
+
+UPDATE
+=====================================================================
+THIS COMMAND IS USED TO MODIFY THE RECORDS FROM TABLES.
+
+SYNTAX:
+UPDATE TABLE_NAME
+SET COL_NAME1=VAL1[COL2=VAL2,...]
+WHERE FILTER CONDITION
+
+
+UPDATE ACC
+SET  PHONE=53232
+WHERE ACC_NO=2;
+
+
+
+DELETE
+========================================================================
+THIS COMMAND IS USED TO DELETE THE PARTICULAR RECORDS FROM TABLE.
+
+
+SYNTAX:
+DELETE FROM TABLE_NAME
+WHERE FILTER CONDITION;
+
+
+DELETE FROM ACC
+WHERE ACC_NO=3;
+
+***********************************************************************************
+TRUNCATE
+===================
+SYNTAX: TRUNCATE TABLE TABLE_NAME;
+
+IT IS USED TO DELECT RECORD BUT TABLE STRUCTURE REMAINS SAME,
+
+
+DROP
+=================
+SYNTAX: DROP TABLE TABLE_NAME;
+
+IT IS USED TO DELETE ENTIRE TABLE FROM THE DATABASE.
+
+
+DELETE 
+====================
+SYNATX:DELETE FROM TABLE_NAME
+WHERE CONDITION;
+
+===========================================================================================================
+COMPANY DATABASE
+
+
+INSERT INTO EMP VALUES(1601,'SIDDARATH','PATIL','1985-11-24','M','CEO',NULL,'2016-10-20',500000,NULL,114,507);
+INSERT INTO EMP VALUES(1602, 'HEMA', 'SHETTY', '1996-03-20', 'F', 'HR', 1601, '2016-10-20', 150000.00, NULL, 112, 507),
+INSERT INTO EMP VALUES(1701, 'RAHUL', 'MUKHARJEE', '1991-02-19', 'M', 'MANAGER', 1602, '2017-04-17', 100000.00, NULL, 111, NULL);
+INSERT INTO EMP VALUES(1702, 'SAMEER', 'KHAN', '1995-04-20', 'M', 'MANAGER', 1602, '2017-07-07', 120000.00, NULL,110,NULL);
+INSERT INTO EMP VALUES(1801,'JAHNAVI','NAIK','1996-04-11','F','DISPATCHER',1702,'2020-03-15',45000.00,1000.00,110,NULL);
+INSERT INTO EMP VALUES(1901,'SHIVANI','RAI','1998-11-07','F','TESTER',1601,'2019-12-12',45000,NULL,113,502),
+INSERT INTO EMP VALUES(1902,'ABHIJIT','GOWDA','1997-12-25','M','DISPATCHER',1702,'2019-12-28',50000,NULL,110,505),
+INSERT INTO EMP VALUES(1903,'KARAN','BHAT','1997-12-26','M','SALESMAN',1701,'2019-12-26',45000,NULL,111,NULL);
+                        INSERT INTO EMP VALUES(2001,'MURALI','KRISHNAN','1998-06-08','M','DISPATCHER',1702,'2020-03-15',45000,1000,110,NULL);
+                        INSERT INTO EMP VALUES(2002,'DHARANI','PATIL','1998-11-10','F','DEVELOPER',1601,'2021-06-20',30000,3000,113,NULL);
+                        INSERT INTO EMP VALUES(2101,'RASHMI','GOWDA','1995-10-03','F','SALESMAN',1701,'2021-01-02',45000,3000,111,NULL);
+                        INSERT INTO EMP VALUES(2102,'FARIYA','TAJ','1999-01-03','F','DEVELOPER',1601,'2021-03-01',32000,3600,113,NULL);
+                       INSERT INTO EMP VALUES (2103,'PRIYA','SHETTY','1998-03-20','F','ACCOUNTANT',1602,'2021-05-01',32000,3600,112,NULL);
+                        INSERT INTO EMP VALUES(2104,'AMAN','RAI','1998-08-15','M','SALESMAN',1701,'2021-12-26',40000,NULL,111,NULL);
+                        INSERT INTO EMP VALUES(2201,'KIRAN','RAJ','1999-09-21','M','ACCOUNTANT',1602,'2022-08-28',30000,3600,112,503);
+
+=============================================================================================================================
+PROJECTIONS
+ 
+It is used to retrieve the data from the table by using column names.
+
+syntax :
+--------
+select column_name
+from table_name;
+
+
+
+from
+--------------
+>this clause is used to put the table under execution.
+> from clause is the first executeable clause.
+> from clause takes table name as a argument.
+> from clause goes to the database ,searches for the given table and puts the table under execution.
+
+
+select
+--------------
+select clause is used to display the records from table.
+
+===================================================================================================
+1.WRITE A QUERY TO DISPLAY THE F_NAME AND L_NAME FROM EMP TABLE
+
+SELECT FNAME,LNAME
+    -> FROM EMP;
++-----------+-----------+
+| FNAME     | LNAME     |
++-----------+-----------+
+| SIDDARATH | PATIL     |
+| HEMA      | SHETTY    |
+| RAHUL     | MUKHARJEE |
+| SAMEER    | KHAN      |
+| JAHNAVI   | NAIK      |
+| SHIVANI   | RAI       |
+| ABHIJIT   | GOWDA     |
+| KARAN     | BHAT      |
+| MURALI    | KRISHNAN  |
+| DHARANI   | PATIL     |
+| RASHMI    | GOWDA     |
+| FARIYA    | TAJ       |
+| PRIYA     | SHETTY    |
+| AMAN      | RAI       |
+| KIRAN     | RAJ       |
++-----------+-----------+
+
+2.WRITE QUERY TO DISPLAY SALARY,JOB,FNAME,LNAME
+
+
+mysql> SELECT FNAME,LNAME,SAL,JOB
+    -> FROM EMP;
++-----------+-----------+-----------+------------+
+| FNAME     | LNAME     | SAL       | JOB        |
++-----------+-----------+-----------+------------+
+| SIDDARATH | PATIL     | 500000.00 | CEO        |
+| HEMA      | SHETTY    | 150000.00 | HR         |
+| RAHUL     | MUKHARJEE | 100000.00 | MANAGER    |
+| SAMEER    | KHAN      | 120000.00 | MANAGER    |
+| JAHNAVI   | NAIK      |  45000.00 | DISPATCHER |
+| SHIVANI   | RAI       |  45000.00 | TESTER     |
+| ABHIJIT   | GOWDA     |  50000.00 | DISPATCHER |
+| KARAN     | BHAT      |  45000.00 | SALESMAN   |
+| MURALI    | KRISHNAN  |  45000.00 | DISPATCHER |
+| DHARANI   | PATIL     |  30000.00 | DEVELOPER  |
+| RASHMI    | GOWDA     |  45000.00 | SALESMAN   |
+| FARIYA    | TAJ       |  32000.00 | DEVELOPER  |
+| PRIYA     | SHETTY    |  32000.00 | ACCOUNTANT |
+| AMAN      | RAI       |  40000.00 | SALESMAN   |
+| KIRAN     | RAJ       |  30000.00 | ACCOUNTANT |
++-----------+-----------+-----------+------------+
+15 rows in set (0.00 sec)
+
+3.WRITE A QUERY TO DISPLAY DETAILS OF EMP
+ SELECT * FROM EMP;
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME     | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1601 | SIDDARATH | PATIL     | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 |    NULL |  114 |  507 |
+| 1602 | HEMA      | SHETTY    | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1701 | RAHUL     | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1702 | SAMEER    | KHAN      | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1801 | JAHNAVI   | NAIK      | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1901 | SHIVANI   | RAI       | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 |    NULL |  113 |  502 |
+| 1902 | ABHIJIT   | GOWDA     | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 1903 | KARAN     | BHAT      | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI    | KRISHNAN  | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2002 | DHARANI   | PATIL     | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |
+| 2101 | RASHMI    | GOWDA     | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA    | TAJ       | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA     | SHETTY    | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2104 | AMAN      | RAI       | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
+| 2201 | KIRAN     | RAJ       | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+4.WRITE A QUERY TO DISPLAY FNAME,LNAME,SAL ALONG WITH THE ANNUAL SALARY.
+
+SELECT FNAME,LNAME,SAL*12,SAL
+    -> FROM EMP;
++-----------+-----------+------------+-----------+
+| FNAME     | LNAME     | SAL*12     | SAL       |
++-----------+-----------+------------+-----------+
+| SIDDARATH | PATIL     | 6000000.00 | 500000.00 |
+| HEMA      | SHETTY    | 1800000.00 | 150000.00 |
+| RAHUL     | MUKHARJEE | 1200000.00 | 100000.00 |
+| SAMEER    | KHAN      | 1440000.00 | 120000.00 |
+| JAHNAVI   | NAIK      |  540000.00 |  45000.00 |
+| SHIVANI   | RAI       |  540000.00 |  45000.00 |
+| ABHIJIT   | GOWDA     |  600000.00 |  50000.00 |
+| KARAN     | BHAT      |  540000.00 |  45000.00 |
+| MURALI    | KRISHNAN  |  540000.00 |  45000.00 |
+| DHARANI   | PATIL     |  360000.00 |  30000.00 |
+| RASHMI    | GOWDA     |  540000.00 |  45000.00 |
+| FARIYA    | TAJ       |  384000.00 |  32000.00 |
+| PRIYA     | SHETTY    |  384000.00 |  32000.00 |
+| AMAN      | RAI       |  480000.00 |  40000.00 |
+| KIRAN     | RAJ       |  360000.00 |  30000.00 |
++-----------+-----------+------------+-----------+
+
+5.WRITE A QUERY TO DISPLAY FNAME,LNAME,SAL,ANNUAL SALARY WITH 50000 BOUNS.
+
+SELECT FNAME,LNAME,SAL*12+50000,SAL
+    -> FROM EMP;
++-----------+-----------+--------------+-----------+
+| FNAME     | LNAME     | SAL*12+50000 | SAL       |
++-----------+-----------+--------------+-----------+
+| SIDDARATH | PATIL     |   6050000.00 | 500000.00 |
+| HEMA      | SHETTY    |   1850000.00 | 150000.00 |
+| RAHUL     | MUKHARJEE |   1250000.00 | 100000.00 |
+| SAMEER    | KHAN      |   1490000.00 | 120000.00 |
+| JAHNAVI   | NAIK      |    590000.00 |  45000.00 |
+| SHIVANI   | RAI       |    590000.00 |  45000.00 |
+| ABHIJIT   | GOWDA     |    650000.00 |  50000.00 |
+| KARAN     | BHAT      |    590000.00 |  45000.00 |
+| MURALI    | KRISHNAN  |    590000.00 |  45000.00 |
+| DHARANI   | PATIL     |    410000.00 |  30000.00 |
+| RASHMI    | GOWDA     |    590000.00 |  45000.00 |
+| FARIYA    | TAJ       |    434000.00 |  32000.00 |
+| PRIYA     | SHETTY    |    434000.00 |  32000.00 |
+| AMAN      | RAI       |    530000.00 |  40000.00 |
+| KIRAN     | RAJ       |    410000.00 |  30000.00 |
++-----------+-----------+--------------+-----------+
+
+6.WRITE A QUERY TO DISPLAY FNAME,LNAME WITH 5000 RS HIKE
+
+ SELECT FNAME,LNAME,SAL+5000
+    -> FROM EMP;
++-----------+-----------+-----------+
+| FNAME     | LNAME     | SAL+5000  |
++-----------+-----------+-----------+
+| SIDDARATH | PATIL     | 505000.00 |
+| HEMA      | SHETTY    | 155000.00 |
+| RAHUL     | MUKHARJEE | 105000.00 |
+| SAMEER    | KHAN      | 125000.00 |
+| JAHNAVI   | NAIK      |  50000.00 |
+| SHIVANI   | RAI       |  50000.00 |
+| ABHIJIT   | GOWDA     |  55000.00 |
+| KARAN     | BHAT      |  50000.00 |
+| MURALI    | KRISHNAN  |  50000.00 |
+| DHARANI   | PATIL     |  35000.00 |
+| RASHMI    | GOWDA     |  50000.00 |
+| FARIYA    | TAJ       |  37000.00 |
+| PRIYA     | SHETTY    |  37000.00 |
+| AMAN      | RAI       |  45000.00 |
+| KIRAN     | RAJ       |  35000.00 |
++-----------+-----------+-----------+
+
+7. WRITE A QUERY TO DISPLAY THE FNAME,SAL WITH 10% HIKE
+
+ SELECT FNAME,(SAL*0.10)+SAL
+    -> FROM EMP;
++-----------+----------------+
+| FNAME     | (SAL*0.10)+SAL |
++-----------+----------------+
+| SIDDARATH |    550000.0000 |
+| HEMA      |    165000.0000 |
+| RAHUL     |    110000.0000 |
+| SAMEER    |    132000.0000 |
+| JAHNAVI   |     49500.0000 |
+| SHIVANI   |     49500.0000 |
+| ABHIJIT   |     55000.0000 |
+| KARAN     |     49500.0000 |
+| MURALI    |     49500.0000 |
+| DHARANI   |     33000.0000 |
+| RASHMI    |     49500.0000 |
+| FARIYA    |     35200.0000 |
+| PRIYA     |     35200.0000 |
+| AMAN      |     44000.0000 |
+| KIRAN     |     33000.0000 |
++-----------+----------------+
+ SELECT FNAME,SAL*(1+0.1)
+    -> FROM EMP;
+
+8.WRITE A QUERY TO DISPLAY FNAME,SALARY WITH 7% DEDUCATION.
+
+mysql> SELECT FNAME,SAL-(SAL*0.07)
+    -> FROM EMP;
++-----------+----------------+
+| FNAME     | SAL-(SAL*0.07) |
++-----------+----------------+
+| SIDDARATH |    465000.0000 |
+| HEMA      |    139500.0000 |
+| RAHUL     |     93000.0000 |
+| SAMEER    |    111600.0000 |
+| JAHNAVI   |     41850.0000 |
+| SHIVANI   |     41850.0000 |
+| ABHIJIT   |     46500.0000 |
+| KARAN     |     41850.0000 |
+| MURALI    |     41850.0000 |
+| DHARANI   |     27900.0000 |
+| RASHMI    |     41850.0000 |
+| FARIYA    |     29760.0000 |
+| PRIYA     |     29760.0000 |
+| AMAN      |     37200.0000 |
+| KIRAN     |     27900.0000 |
++-----------+----------------+
+
+9.WQTD THE FNAME,SAL WITH5% HIKE AND ANNUAL SALARY WITH 10% HIKE
+
+mysql> SELECT FNAME,SAL+(SAL*0.05) as sala_hike_5,(SAL+(SAL*0.1))*12
+    -> FROM EMP;
++-----------+----------------+--------------------+
+| FNAME     | SAL+(SAL*0.05) | (SAL+(SAL*0.1))*12 |
++-----------+----------------+--------------------+
+| SIDDARATH |    525000.0000 |        6600000.000 |
+| HEMA      |    157500.0000 |        1980000.000 |
+| RAHUL     |    105000.0000 |        1320000.000 |
+| SAMEER    |    126000.0000 |        1584000.000 |
+| JAHNAVI   |     47250.0000 |         594000.000 |
+| SHIVANI   |     47250.0000 |         594000.000 |
+| ABHIJIT   |     52500.0000 |         660000.000 |
+| KARAN     |     47250.0000 |         594000.000 |
+| MURALI    |     47250.0000 |         594000.000 |
+| DHARANI   |     31500.0000 |         396000.000 |
+| RASHMI    |     47250.0000 |         594000.000 |
+| FARIYA    |     33600.0000 |         422400.000 |
+| PRIYA     |     33600.0000 |         422400.000 |
+| AMAN      |     42000.0000 |         528000.000 |
+| KIRAN     |     31500.0000 |         396000.000 |
++-----------+----------------+--------------------+
+
+10.WQTD  THE EMP FNAME,SALARY WITH 5% HIKE AND COMM WITH 5% DEDUCTION.
+
+SELECT FNAME,SAL+(SAL*0.05),COMM-(COMM*0.05)
+    -> FROM EMP;
++-----------+----------------+------------------+
+| FNAME     | SAL+(SAL*0.05) | COMM-(COMM*0.05) |
++-----------+----------------+------------------+
+| SIDDARATH |    525000.0000 |             NULL |
+| HEMA      |    157500.0000 |             NULL |
+| RAHUL     |    105000.0000 |             NULL |
+| SAMEER    |    126000.0000 |             NULL |
+| JAHNAVI   |     47250.0000 |         950.0000 |
+| SHIVANI   |     47250.0000 |             NULL |
+| ABHIJIT   |     52500.0000 |             NULL |
+| KARAN     |     47250.0000 |             NULL |
+| MURALI    |     47250.0000 |         950.0000 |
+| DHARANI   |     31500.0000 |        2850.0000 |
+| RASHMI    |     47250.0000 |        2850.0000 |
+| FARIYA    |     33600.0000 |        3420.0000 |
+| PRIYA     |     33600.0000 |        3420.0000 |
+| AMAN      |     42000.0000 |             NULL |
+| KIRAN     |     31500.0000 |        3420.0000 |
++-----------+----------------+------------------+
+
+ALIAS
+========
+It is a alternative name given to columns/resultant table obtained by dql queries.
+
+syntax
+=====
+select cloumn_name_1 as alias_1,
+       column_name_2  alias_2,
+       column_name_3 "alias_3"
+from table_name;
+
+
+>we can pass alias name either by using AS keyword or "double quotes".
+>with  or without  using AS keyword, we can pass alias name.
+> we can pass special characters or spaces by using "double quotes".
+=================================================================
+
+11.wqtd the EMP FNAME,SAL WITH 7% HIKE AND COMM WITH 10% HIKE  GIVE THE ALIAS NAMES FOR THE EXPRESSIONS.
+
+ SELECT FNAME,SAL+(SAL*0.07) "SAL_HIKE_7%",COMM+(COMM*0.1) AS COMM_HIKE_10
+    -> FROM EMP;
++-----------+-------------+--------------+
+| FNAME     | SAL_HIKE_7% | COMM_HIKE_10 |
++-----------+-------------+--------------+
+| SIDDARATH | 535000.0000 |         NULL |
+| HEMA      | 160500.0000 |         NULL |
+| RAHUL     | 107000.0000 |         NULL |
+| SAMEER    | 128400.0000 |         NULL |
+| JAHNAVI   |  48150.0000 |     1100.000 |
+| SHIVANI   |  48150.0000 |         NULL |
+| ABHIJIT   |  53500.0000 |         NULL |
+| KARAN     |  48150.0000 |         NULL |
+| MURALI    |  48150.0000 |     1100.000 |
+| DHARANI   |  32100.0000 |     3300.000 |
+| RASHMI    |  48150.0000 |     3300.000 |
+| FARIYA    |  34240.0000 |     3960.000 |
+| PRIYA     |  34240.0000 |     3960.000 |
+| AMAN      |  42800.0000 |         NULL |
+| KIRAN     |  32100.0000 |     3960.000 |
++-----------+-------------+--------------+
+
+12.WQTD THE EMP FNAME,LNAME,JOB AS DESCIGNATION AND ANNUAL SALARY AS ANNUAL INCOME FROM TABLE.
+
+
+SELECT FNAME,LNAME, JOB AS DESIGNATION ,SAL*12 AS "ANNUAL_INCOME"
+    -> FROM EMP;
++-----------+-----------+-------------+---------------+
+| FNAME     | LNAME     | DESIGNATION | ANNUAL_INCOME |
++-----------+-----------+-------------+---------------+
+| SIDDARATH | PATIL     | CEO         |    6000000.00 |
+| HEMA      | SHETTY    | HR          |    1800000.00 |
+| RAHUL     | MUKHARJEE | MANAGER     |    1200000.00 |
+| SAMEER    | KHAN      | MANAGER     |    1440000.00 |
+| JAHNAVI   | NAIK      | DISPATCHER  |     540000.00 |
+| SHIVANI   | RAI       | TESTER      |     540000.00 |
+| ABHIJIT   | GOWDA     | DISPATCHER  |     600000.00 |
+| KARAN     | BHAT      | SALESMAN    |     540000.00 |
+| MURALI    | KRISHNAN  | DISPATCHER  |     540000.00 |
+| DHARANI   | PATIL     | DEVELOPER   |     360000.00 |
+| RASHMI    | GOWDA     | SALESMAN    |     540000.00 |
+| FARIYA    | TAJ       | DEVELOPER   |     384000.00 |
+| PRIYA     | SHETTY    | ACCOUNTANT  |     384000.00 |
+| AMAN      | RAI       | SALESMAN    |     480000.00 |
+| KIRAN     | RAJ       | ACCOUNTANT  |     360000.00 |
++-----------+-----------+-------------+---------------+
+
+=================================================================
+DISTINCT
+
+>distinct is used to avoid the duplicate records from the resultant table
+>we can pass multiple columns inside DISTINCT clause.
+>whenever we pass multiple columns,it checks for the combination.
+>either * or DISTINCT must be the very first argument.
+
+syntax:
+---------
+select DISTINCT COLUMN_NAME
+FROM TABLE_NAME;
+
+13. WQTD THE DIFFERENT JOB ROLES AVAILABLE IN THE COMPANY
+
+SELECT DISTINCT JOB
+    -> FROM EMP;
++------------+
+| JOB        |
++------------+
+| CEO        |
+| HR         |
+| MANAGER    |
+| DISPATCHER |
+| TESTER     |
+| SALESMAN   |
+| DEVELOPER  |
+| ACCOUNTANT |
++------------+
+
+14.WQTD THE EMP DEPTS AVAILABLE IN EMP
+
+
+  SELECT DISTINCT DNO
+    -> FROM EMP;
++------+
+| DNO  |
++------+
+|  114 |
+|  112 |
+|  111 |
+|  110 |
+|  113 |
++------+
+
+15. WQTD THE DETAILS ALONG WITH THE ANNUAL SALARY FROM EMP TABEL.
+
+SELECT *,SAL*12  "ANNUAL SALARY"
+    -> FROM EMP;
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+---------------+
+| EID  | FNAME     | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  | ANNUAL SALARY |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+---------------+
+| 1601 | SIDDARATH | PATIL     | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 |    NULL |  114 |  507 |    6000000.00 |
+| 1602 | HEMA      | SHETTY    | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |    1800000.00 |
+| 1701 | RAHUL     | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |    1200000.00 |
+| 1702 | SAMEER    | KHAN      | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |    1440000.00 |
+| 1801 | JAHNAVI   | NAIK      | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |     540000.00 |
+| 1901 | SHIVANI   | RAI       | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 |    NULL |  113 |  502 |     540000.00 |
+| 1902 | ABHIJIT   | GOWDA     | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |     600000.00 |
+| 1903 | KARAN     | BHAT      | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |     540000.00 |
+| 2001 | MURALI    | KRISHNAN  | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |     540000.00 |
+| 2002 | DHARANI   | PATIL     | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |     360000.00 |
+| 2101 | RASHMI    | GOWDA     | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |     540000.00 |
+| 2102 | FARIYA    | TAJ       | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |     384000.00 |
+| 2103 | PRIYA     | SHETTY    | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |     384000.00 |
+| 2104 | AMAN      | RAI       | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |     480000.00 |
+| 2201 | KIRAN     | RAJ       | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |     360000.00 |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+---------------+
+
+
+
+
+SELECTION
+===================================================
+ IT IS USED
+SELECT COLUMN_NAME
+FROM TABLE_NAME
+WHERE FILTER CONDITION;
+
+WHERE CLAUSE
+============
+IT IS USED TO FILTER THE RECORDS.
+
+CHARACTERISTICS OF WHERE CLAUSE
+-----------------------------------------------------
+>WHERE CLAUSE EXECUTES ROW BY ROW.
+>WHERE CLAUSE FOLLOWS TRUE OR FALSE CONDITION.
+>WE CAN PASS MULTIPLE CONDITIONS INSIDE WHERE CLAUSE.
+>WE XANNOT PASS ALIAS NAME INSIDE WHERE CLAUSE IF WE ARE ASSIGNING ALIAS NAME INSIDE SELECT CLAUSE.
+==================================================================================================================================
+
+16. WQTD THE DETAILS OF EMP IF THE EMP FNAME IS AMAN.
+
+SELECT *
+FROM EMP
+WHERE FNAME='AMAN';
++------+-------+-------+------------+--------+----------+------+------------+----------+------+------+------+
+| EID  | FNAME | LNAME | DOB        | GENDER | JOB      | MGR  | DOJ        | SAL      | COMM | DNO  | CID  |
++------+-------+-------+------------+--------+----------+------+------------+----------+------+------+------+
+| 2104 | AMAN  | RAI   | 1998-08-15 | M      | SALESMAN | 1701 | 2021-12-26 | 40000.00 | NULL |  111 | NULL |
++------+-------+-------+------------+--------+----------+------+------------+----------+------+------+------+
+
+17. WQTD THE EMP FNAME ,LNAME IF THE EMP LNAME IS SHETTY.
+ SELECT FNAME,LNAME
+    -> FROM EMP
+    -> WHERE LNAME='SHETTY';
++-------+--------+
+| FNAME | LNAME  |
++-------+--------+
+| HEMA  | SHETTY |
+| PRIYA | SHETTY |
++-------+--------+
+
+18.WRQTD THE EMP FLNAME,LNAME,LOB IF THE EMP IS WORKING AS SALESMAN.
+SELECT FNAME,LNAME,JOB
+    -> FROM EMP
+    -> WHERE JOB='SALESMAN';
++--------+-------+----------+
+| FNAME  | LNAME | JOB      |
++--------+-------+----------+
+| KARAN  | BHAT  | SALESMAN |
+| RASHMI | GOWDA | SALESMAN |
+| AMAN   | RAI   | SALESMAN |
++--------+-------+----------+
+
+19.WQTD THE EMP DETAILS WHO BORN IN  AFTER THE YEAR 1992.
+
+SELECT * 
+FROM EMP
+WHERE DOB>'1992-12-31';
+
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1602 | HEMA    | SHETTY   | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1702 | SAMEER  | KHAN     | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1901 | SHIVANI | RAI      | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 |    NULL |  113 |  502 |
+| 1902 | ABHIJIT | GOWDA    | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 1903 | KARAN   | BHAT     | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2002 | DHARANI | PATIL    | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |
+| 2101 | RASHMI  | GOWDA    | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA  | TAJ      | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA   | SHETTY   | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2104 | AMAN    | RAI      | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
+| 2201 | KIRAN   | RAJ      | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+*******************************************************************************************************************************************************
+OPERATORS
+======================================
+1.ARITHMETIC OPERATORS(+,-,*,/,%)
+2.RELATIONAL OPERATORS(<,>,>=,<=,!=,=)
+3.LOGICAL OPERARTORS (AND,OR,NOT)
+4.SPECIAL OPERATORS(IN,NOT IN,IS , BETWEEN,NOT BETWEEN,LIKE ETC)
+5.SUB QUERY OPERATORS(ALL,ANY,EXISTS,NOT EXISTS ETC..)
+
+AND : THE OUTPUT WILL BE TRUE IF ALL THE CONDITIONS ARE TRUE.
+
+A B OUTPUT
+----------
+0 0   0
+0 1   0
+1 0   0 
+1 1   1
+
+OR:THE OUTPUT WILL BE TRUE IF ANY ONE OF THE CONDITION IS TRUE.
+
+A B OUTPUT
+-----------
+0 0  0
+0 1  1
+1 0  1
+1 1  1
+**********************************************************************************************************************************************************
+
+20. WQTD THE EMP FNAME,LNAME,JOB,SALARY IF THE EMP IS GETTING SALARY MORE THAN 32000 BUT LESS THAN 50000
+SELECT FNAME ,LNAME,JOB,SAL
+FROM EMP
+WHERE SAL>32000 AND SAL<50000;
+
++---------+----------+------------+----------+
+| FNAME   | LNAME    | JOB        | SAL      |
++---------+----------+------------+----------+
+| JAHNAVI | NAIK     | DISPATCHER | 45000.00 |
+| SHIVANI | RAI      | TESTER     | 45000.00 |
+| KARAN   | BHAT     | SALESMAN   | 45000.00 |
+| MURALI  | KRISHNAN | DISPATCHER | 45000.00 |
+| RASHMI  | GOWDA    | SALESMAN   | 45000.00 |
+| AMAN    | RAI      | SALESMAN   | 40000.00 |
++---------+----------+------------+----------+
+
+21. WQTD THE EMP FNAME,LNAME,JOB IF THE EMP IS WORKING AS SALESMAN OR MANAGER
+
+ SELECT FNAME,LNAME,JOB
+    -> FROM EMP
+    -> WHERE JOB='SALESMAN' OR JOB = 'MANAGER';
++--------+-----------+----------+
+| FNAME  | LNAME     | JOB      |
++--------+-----------+----------+
+| RAHUL  | MUKHARJEE | MANAGER  |
+| SAMEER | KHAN      | MANAGER  |
+| KARAN  | BHAT      | SALESMAN |
+| RASHMI | GOWDA     | SALESMAN |
+| AMAN   | RAI       | SALESMAN |
++--------+-----------+----------+
+
+22.WQTD THE DETAILS OF EMP WHO WERE HIRED BEFORE THE YEAR 2020.
+
+SELECT *
+FROM EMP
+WHERE DOJ<'2020-01-01';
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+------+------+------+
+| EID  | FNAME     | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+------+------+------+
+| 1601 | SIDDARATH | PATIL     | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 | NULL |  114 |  507 |
+| 1602 | HEMA      | SHETTY    | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 | NULL |  112 |  507 |
+| 1701 | RAHUL     | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 | NULL |  111 | NULL |
+| 1702 | SAMEER    | KHAN      | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 | NULL |  110 | NULL |
+| 1901 | SHIVANI   | RAI       | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 | NULL |  113 |  502 |
+| 1902 | ABHIJIT   | GOWDA     | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 | NULL |  110 |  505 |
+| 1903 | KARAN     | BHAT      | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 | NULL |  111 | NULL |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+------+------+------+
+
+23. WQTD THE DETAILS OF EMP WHO WERE BORN DURING THE YEAR 1995.
+
+SELECT * 
+FROM EMP
+WHERE DOB>='1995-01-01' AND DOB<='1995-12-31';
++------+--------+-------+------------+--------+----------+------+------------+-----------+---------+------+------+
+| EID  | FNAME  | LNAME | DOB        | GENDER | JOB      | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+--------+-------+------------+--------+----------+------+------------+-----------+---------+------+------+
+| 1702 | SAMEER | KHAN  | 1995-04-20 | M      | MANAGER  | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 2101 | RASHMI | GOWDA | 1995-10-03 | F      | SALESMAN | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
++------+--------+-------+------------+--------+----------+------+------------+-----------+---------+------+------+
+
+24.WQTD THE EMP FNAME,SAL,JOB,DNO IF THE EMP IS WORKING AS SALESMAN OR MANAGER OR DEVELOPER IN DEPT 110 OR 111 OR 112.
+
+SELECT FNAME,SAL,JOB,DNO
+FROM EMP
+WHERE (JOB= 'SALESMAN' OR 'JOB ='MANAGER' OR JOB='DEVELOPER')  AND (DNO=111 OR DNO=110 OR DNO=112); 
+
+
+25.WQTD THE DETAILS OF EMP IF EMP IS NOT WORKING AS CEO BUT GETTING SALARY MORE THAN 50000.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE JOB !='CEO' AND SAL>50000;
++------+--------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+| EID  | FNAME  | LNAME     | DOB        | GENDER | JOB     | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+--------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+| 1602 | HEMA   | SHETTY    | 1996-03-20 | F      | HR      | 1601 | 2016-10-20 | 150000.00 | NULL |  112 |  507 |
+| 1701 | RAHUL  | MUKHARJEE | 1991-02-19 | M      | MANAGER | 1602 | 2017-04-17 | 100000.00 | NULL |  111 | NULL |
+| 1702 | SAMEER | KHAN      | 1995-04-20 | M      | MANAGER | 1602 | 2017-07-07 | 120000.00 | NULL |  110 | NULL |
++------+--------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+
+26. WQTD THE EMP FNAME ,LNAME,JOB AND SALARY IF THE EMP IS WORKING AS SALESMAN OR  DISPATCHER OR ACCOUNTANT AND GETTING SALARY MORE THAN 32000.
+
+ SELECT FNAME,LNAME,JOB,SAL
+    -> FROM EMP
+    -> WHERE (JOB='SALESMAN' OR JOB='DISPATCHER' OR JOB='ACCOUNTANT') AND (SAL>32000);
++---------+----------+------------+----------+
+| FNAME   | LNAME    | JOB        | SAL      |
++---------+----------+------------+----------+
+| JAHNAVI | NAIK     | DISPATCHER | 45000.00 |
+| ABHIJIT | GOWDA    | DISPATCHER | 50000.00 |
+| KARAN   | BHAT     | SALESMAN   | 45000.00 |
+| MURALI  | KRISHNAN | DISPATCHER | 45000.00 |
+| RASHMI  | GOWDA    | SALESMAN   | 45000.00 |
+| AMAN    | RAI      | SALESMAN   | 40000.00 |
++---------+----------+------------+----------+
+
+27.WQTD THE DETAILS OF EMP IF THE EMP IS WORKING AS DEVELOPER OR TESTER OR DISPATCHER IN DEPT 113 OR 112 OR 111.
+
+SELECT *
+FROM EMP
+WHERE (JOB='DEVELOPER' OR JOB ='TESTER' OR JOB='DISPATCHER') AND (DNO=113 OR DNO=112 OR DNO=111);
++------+---------+-------+------------+--------+-----------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME | DOB        | GENDER | JOB       | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+-------+------------+--------+-----------+------+------------+----------+---------+------+------+
+| 1901 | SHIVANI | RAI   | 1998-11-07 | F      | TESTER    | 1601 | 2019-12-12 | 45000.00 |    NULL |  113 |  502 |
+| 2002 | DHARANI | PATIL | 1998-11-10 | F      | DEVELOPER | 1601 | 2021-06-20 | 30000.00 | 3000.00 |  113 | NULL |
+| 2102 | FARIYA  | TAJ   | 1999-01-03 | F      | DEVELOPER | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
++------+---------+-------+------------+--------+-----------+------+------------+----------+---------+------+------+
+
+SELECT *
+FROM EMP
+WHERE  (JOB='DEVELOPER' OR JOB ='TESTER' OR JOB='DISPATCHER') AND DNO IN(111,112,113);
+
+
+
+IN OPERATOR 
+===========================================================================
+IT IS A MULTIVALUED OPERATOR WHICH TAKES SINGLE VALUE AT LHS AND MULTIPLE VALUES AT RHS.
+
+
+SYNTAX:
+----------------
+LHS                       RHS
+COLUMN_NAME IN/NOT IN(V1,V2,V3,..,VN);
+
+NOTE:
+>IN OPERATOR WORKS IN THE FORM OF OR OPERATOR.
+>NOT IN OPERATOR WORKS IN THE FORM OF AND OPERATOR.
+
+
+28. WQTD THE EMP FNAME,SAL ANNUAL SALARY IF EMP IS GETTING ANNUAL SALARY MORE THAN 600000
+
+SELECT FNAME,SAL*12
+    -> FROM EMP
+    -> WHERE (SAL*12)>600000;
++-----------+------------+
+| FNAME     | SAL*12     |
++-----------+------------+
+| SIDDARATH | 6000000.00 |
+| HEMA      | 1800000.00 |
+| RAHUL     | 1200000.00 |
+| SAMEER    | 1440000.00 |
++-----------+------------+
+
+29.wqtd the DETAILS OF EMP WHO WERE HIRED DURING THE YEAR 2021.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE DOJ>='2021-01-01' AND DOJ<='2021-12-31';
++------+---------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME  | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 2002 | DHARANI | PATIL  | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 | 30000.00 | 3000.00 |  113 | NULL |
+| 2101 | RASHMI  | GOWDA  | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA  | TAJ    | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA   | SHETTY | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 | 32000.00 | 3600.00 |  112 | NULL |
+| 2104 | AMAN    | RAI    | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 | 40000.00 |    NULL |  111 | NULL |
++------+---------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+BETWEEN OPERARTOR 
+===================================
+>WHEN EVER WE COME ACROSS RANGE VALUES , WE CAN GO FOR BETWEEN OPERATOR.
+>BETWEEN OPERATOR WILL INCLUDE THE RANGE  VALUE
+
+
+SYNTAX:
+COLUMN_NAME BETWEEN/NOT BETWEEN LOWER RANGE AND HIGHER RANGE;
+
+
+ OR 
+
+
+SELECT * 
+FROM EMP
+WHERE DOJ BETWEEN '2021-01-01' AND '2021-12-31';
+
+30.WQTD THE FNAME,LNAME,SAL IF THE EMP IS GETTING SALARY MORE THAN OR EQUAL TO 32000 LESS THAN OR EQUAL T0 50000.
+
+ SELECT FNAME,LNAME ,SAL
+    -> FROM EMP
+    -> WHERE SAL<=32000 OR SAL=50000;
++---------+--------+----------+
+| FNAME   | LNAME  | SAL      |
++---------+--------+----------+
+| ABHIJIT | GOWDA  | 50000.00 |
+| DHARANI | PATIL  | 30000.00 |
+| FARIYA  | TAJ    | 32000.00 |
+| PRIYA   | SHETTY | 32000.00 |
+| KIRAN   | RAJ    | 30000.00 |
++---------+--------+----------+
+
+31. WQTD THE DETAILS OF EMP IF EMP IS WORKING AS SALESMAN OR DISPATCHER OR ACCOUNTANT BUT NOT IN DEPT 111 OR 112 OR 113.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE (JOB='SALESMAN' OR JOB='DISPATCHER' OR JOB='ACCOUNTANT') AND NOT  (DNO=111 OR DNO=112 OR DNO=113);
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 1902 | ABHIJIT | GOWDA    | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 | 50000.00 |    NULL |  110 |  505 |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+32.WQTD THE DETAILS OF EMP WHO ARE GETTING SAL MORE THAN 30000 AND LESS THAN 40000
+
+SELECT *
+    -> FROM EMP
+    -> WHERE SAL>30000 AND SAL<40000;
++------+--------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME  | LNAME  | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+--------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 2102 | FARIYA | TAJ    | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA  | SHETTY | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 | 32000.00 | 3600.00 |  112 | NULL |
++------+--------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+33.WQTD THE DETAILS OF EMP WHO ARE ALSO THE CUSTOMER OF THAT COMPANY.
+
+
+IS OPERATOR 
+=========================
+IS OPERATOR IS USED TO CHECK WHETHER THE GIVEN RECORD IS NULL/NOT NULL
+SYNTAX:COLUMN_NAME IS NULL/NOT NULL;
+
+SELECT * FROM EMP
+    -> WHERE CID IS NOT NULL;
++------+-----------+--------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME     | LNAME  | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+-----------+--------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1601 | SIDDARATH | PATIL  | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 |    NULL |  114 |  507 |
+| 1602 | HEMA      | SHETTY | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1901 | SHIVANI   | RAI    | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 |    NULL |  113 |  502 |
+| 1902 | ABHIJIT   | GOWDA  | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 2201 | KIRAN     | RAJ    | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+-----------+--------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+34.WQTD THE DETAILS OF EMP WHO ARE GETTING COMM.
+ SELECT * FROM EMP 
+WHERE COMM IS NOT NULL;
+ SELECT * FROM EMP
+    -> WHERE COMM IS NOT NULL;
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 2002 | DHARANI | PATIL    | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 | 30000.00 | 3000.00 |  113 | NULL |
+| 2101 | RASHMI  | GOWDA    | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA  | TAJ      | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA   | SHETTY   | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 | 32000.00 | 3600.00 |  112 | NULL |
+| 2201 | KIRAN   | RAJ      | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 | 30000.00 | 3600.00 |  112 |  503 |
+-----------------------------------------------------------------------------------------------------------------------
+
+35.WQTD THE DETAILS OF EMP WHO DOES NOT HAVE REPORTING MANAGER.
+
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE MGR IS  NULL;
++------+-----------+-------+------------+--------+-----+------+------------+-----------+------+------+------+
+| EID  | FNAME     | LNAME | DOB        | GENDER | JOB | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-----------+-------+------------+--------+-----+------+------------+-----------+------+------+------+
+| 1601 | SIDDARATH | PATIL | 1985-11-24 | M      | CEO | NULL | 2016-10-20 | 500000.00 | NULL |  114 |  507 |
++------+-----------+-------+------------+--------+-----+------+------------+-----------+------+------+------+
+
+LIKE OPERATOR
+=================================================================================================
+LIKE OPERATOR IS USED TO MATCH THE PATTERNS.
+
+SYNTAX:
+----------------
+COLUMN_NAME LIKE/NOT LIKE 'PATTERN TO MATCH';
+
+
+WE USE TWO WILD CARD IN LIKE OPERATOR .THEY ARE :
+>PERCENTILE(%):IT TAKES ANY CHARACTER ANY NUMBER OF TIMES.
+>UNDERSCORE(_):IT TAKES ANY CHARACTER BUT ONLY ONE CHARACTER.
+==================================================================================================
+
+36.WQTD THE DETAILS OF EMP WHOSE FNAME STARTS WITH S.
+
+SELECT * 
+FROM EMP
+WHERE FNAME LIKE '%S';
++------+-----------+-------+------------+--------+---------+------+------------+-----------+------+------+------+
+| EID  | FNAME     | LNAME | DOB        | GENDER | JOB     | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-----------+-------+------------+--------+---------+------+------------+-----------+------+------+------+
+| 1601 | SIDDARATH | PATIL | 1985-11-24 | M      | CEO     | NULL | 2016-10-20 | 500000.00 | NULL |  114 |  507 |
+| 1702 | SAMEER    | KHAN  | 1995-04-20 | M      | MANAGER | 1602 | 2017-07-07 | 120000.00 | NULL |  110 | NULL |
+| 1901 | SHIVANI   | RAI   | 1998-11-07 | F      | TESTER  | 1601 | 2019-12-12 |  45000.00 | NULL |  113 |  502 |
++------+-----------+-------+------------+--------+---------+------+------------+-----------+------+------+------+
+
+37.WQTD  THE FNAME AND LNAME IF EMP LNAME ENDS WITH I.
+
+
+  SELECT FNAME ,LNAME FROM EMP
+    -> WHERE  LNAME LIKE '%I';
++---------+-------+
+| FNAME   | LNAME |
++---------+-------+
+| SHIVANI | RAI   |
+| AMAN    | RAI   |
++---------+-------+
+
+38.WQTD THE DETAILS OF EMP IF THE EMP JOB ROLE CONTAINS MAN IN IT.
+
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE JOB LIKE '%MAN%';
++------+--------+-----------+------------+--------+----------+------+------------+-----------+---------+------+------+
+| EID  | FNAME  | LNAME     | DOB        | GENDER | JOB      | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+--------+-----------+------------+--------+----------+------+------------+-----------+---------+------+------+
+| 1701 | RAHUL  | MUKHARJEE | 1991-02-19 | M      | MANAGER  | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1702 | SAMEER | KHAN      | 1995-04-20 | M      | MANAGER  | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1903 | KARAN  | BHAT      | 1997-12-26 | M      | SALESMAN | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2101 | RASHMI | GOWDA     | 1995-10-03 | F      | SALESMAN | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2104 | AMAN   | RAI       | 1998-08-15 | M      | SALESMAN | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
++------+--------+-----------+------------+--------+----------+------+------------+-----------+---------+------+------+
+
+39.WQTD THE EMP FNAME LNAME IF EMP FNAME CONTAINS ATLEAST TWO A IN IT.
+
+ SELECT FNAME,LNAME
+    -> FROM EMP
+    -> WHERE FNAME LIKE '%A%A%';
++-----------+-------+
+| FNAME     | LNAME |
++-----------+-------+
+| SIDDARATH | PATIL |
+| JAHNAVI   | NAIK  |
+| KARAN     | BHAT  |
+| DHARANI   | PATIL |
+| FARIYA    | TAJ   |
+| AMAN      | RAI   |
++-----------+-------+
+
+
+40.WQTD THE DETAILS OF EMP IF THE EMP FNAME STARTS WITH S OR A.
+ SELECT *
+    -> FROM EMP
+    -> WHERE FNAME LIKE 'S%' OR FNAME LIKE'A%';
++------+-----------+-------+------------+--------+------------+------+------------+-----------+------+------+------+
+| EID  | FNAME     | LNAME | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-----------+-------+------------+--------+------------+------+------------+-----------+------+------+------+
+| 1601 | SIDDARATH | PATIL | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 | NULL |  114 |  507 |
+| 1702 | SAMEER    | KHAN  | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 | NULL |  110 | NULL |
+| 1901 | SHIVANI   | RAI   | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 | NULL |  113 |  502 |
+| 1902 | ABHIJIT   | GOWDA | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 | NULL |  110 |  505 |
+| 2104 | AMAN      | RAI   | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 | NULL |  111 | NULL |
++------+-----------+-------+------------+--------+------------+------+------------+-----------+------+------+------+
+
+41. WQTD THE EMP FNAME DOB IF THE EMP WAS BORN IN THE YEAR 1995 USING LIKE OPERARTOR
+
+SELECT FNAME,DOB
+    -> FROM EMP
+    -> WHERE DOB LIKE '1995%';
++--------+------------+
+| FNAME  | DOB        |
++--------+------------+
+| SAMEER | 1995-04-20 |
+| RASHMI | 1995-10-03 |
++--------+------------+
+
+42. WQTD THE  DETAILS OF EMP WHO WERE HIRED IN THE MONTH OF MAY.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE DOJ LIKE '%_05_%';
++------+-------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME | LNAME  | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+-------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 2103 | PRIYA | SHETTY | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 | 32000.00 | 3600.00 |  112 | NULL |
++------+-------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+43.WQTD THE DETAILS OF EMP WHO WERE HIERD IN THE MONTH OF JAN OR FEB OR MAR.
+SELECT *
+    -> FROM EMP
+    -> WHERE DOJ LIKE '%-01-%' OR DOJ LIKE '%-02-%' OR DOJ LIKE '%-03-%';
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 2101 | RASHMI  | GOWDA    | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA  | TAJ      | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+44.WQTD THE EMP FNAME ,LNAME IF THE EMP FNAME STARTS WITH S OR A AND FNAME ENDS WITH H OR N.
+
+SELECT FNAME, LNAME
+    -> FROM EMP
+    -> WHERE (FNAME LIKE 'S%' OR FNAME LIKE 'A%') AND (FNAME LIKE '%H' OR FNAME LIKE '%N');
++-----------+-------+
+| FNAME     | LNAME |
++-----------+-------+
+| SIDDARATH | PATIL |
+| AMAN      | RAI   |
++-----------+-------+
+
+45.WQTD THE DETAILS EMP  FNAME DOESNOT START WITH S.
+
+
+mysql> SELECT *
+    -> FROM EMP
+    -> WHERE FNAME NOT LIKE 'S%';
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME   | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1602 | HEMA    | SHETTY    | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1701 | RAHUL   | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1801 | JAHNAVI | NAIK      | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1902 | ABHIJIT | GOWDA     | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 1903 | KARAN   | BHAT      | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI  | KRISHNAN  | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2002 | DHARANI | PATIL     | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |
+| 2101 | RASHMI  | GOWDA     | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA  | TAJ       | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA   | SHETTY    | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2104 | AMAN    | RAI       | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
+| 2201 | KIRAN   | RAJ       | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+
+46. WQTD THE DETAILS OF EMP IF THE EMP FNAME DOESNOT START WITH S OR A.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE FNAME NOT LIKE 'S%' AND FNAME NOT LIKE 'A%';
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME   | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1602 | HEMA    | SHETTY    | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1701 | RAHUL   | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1801 | JAHNAVI | NAIK      | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1903 | KARAN   | BHAT      | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI  | KRISHNAN  | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2002 | DHARANI | PATIL     | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |
+| 2101 | RASHMI  | GOWDA     | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA  | TAJ       | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA   | SHETTY    | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2201 | KIRAN   | RAJ       | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+47.WQTD THE  EMP FNAME IF THE FNAME STARTS WITH VOWELS.
+ SELECT FNAME
+    ->  FROM EMP
+    -> WHERE (FNAME LIKE 'A%' )OR (FNAME LIKE 'E%' )OR (FNAME LIKE 'I%' )OR (FNAME LIKE 'O%' )OR(FNAME LIKE 'U%' );
++---------+
+| FNAME   |
++---------+
+| ABHIJIT |
+| AMAN    |
++---------+ 
+
+48. WQTD THE DETAILS OF THE TABLE  IF TABLE NAME CONTAINS ATLEAST 1 % IN IT.
+
+ SELECT *
+    -> FROM STUDENT
+    -> WHERE NAME LIKE'%\%%';
++-------+
+| NAME  |
++-------+
+| AK%A  |
+| S%J%  |
+| %N%E% |
++-------+
+
+ 49. WAQTD THE DETAILS OF THE TABLE IF THE NAME CONTAINS 
+ATLEAST 1_ IN IT.
+ SELECT *
+ FROM STUD
+WHERE NAME LIKE '%\_%';
+
+ 50. WAQTD THE NAME FROM GIVEN TABLE IF THE NAME CONTAINS
+ ATLEAST 2 % IN IT.
+ SELECT NAME
+ FROM STUD
+ WHERE NAME LIKE '%\ \ ';
+
+
+ 51. WAQTD THE DETAILS OF EMP IF THE EMP FNAME STARTS 
+WITH VOWELS OR LAST NAME ENDS WITH VOWELS.
+ SELECT *
+ FROM EMP
+ WHERE (FNAME LIKE 'A%' OR
+ FNAME LIKE 'E%' OR
+ FNAME LIKE 'I%' OR
+ FNAME LIKE 'O%' OR
+ FNAME LIKE 'U%') OR
+      (LNAME LIKE '%A' OR
+       LNAME LIKE '%E' OR
+       LNAME LIKE '%I' OR
+       LNAME LIKE '%O' OR
+       LNAME LIKE '%U');
+
+
+=============================================================================================
+ Functions
+=======================================================================================================
+ Functions are the block of code which is used to perform
+ a specific task.
+
+ TYPES OF FUNCTIONS 
+ **Pre defined (In built Functions)
+ **User defined Functions (PL/SQL).
+
+ PREDEFINED FUNCTIONS
+*************************************************************************************************************
+ Aggregate Functions
+ Character functions
+ Number functions
+ Date functions
+ Window functions
+
+
+ Aggregate Functions
+=================================================================================================================
+>> It takes n number of input and generates a single  output.
+
+ Types of Aggregate Functions
+
+ MAX(): This function is used to obtain the maximum value from the given column.
+ Syntax: MAX(column_name);
+
+ MIN(): This function is used to obtain the minimum value from the given column.
+ Syntax: MIN(column_name);
+
+SUM(): This function is used to obtain the total value from the given column.
+ Syntax: SUM(column_name);
+
+ AVG(): This function is used to obtain the average value from the given column.
+ Syntax: AVG(column_name);
+
+ COUNT(): This function is used to obtain the number of  rows from the given column.
+ Syntax: COUNT( column_name);
+
+
+ Note: Only COUNT(*) takes * as a argument.
+
+ Characteristics of Aggregate Functions
+
+ > Aggregate functions execute group by group.
+ > We cannot pass any other column along with aggregate functions.
+ > We cannot nest aggregate functions.
+ > We cannot pass multiple columns inside aggregate functions.
+ > We cannot pass aggregate functions inside WHERE clause.
+ > Aggregate functions ignore null values.
+
+ GROUP BY > We can pass group by expressions along with 
+aggregate functions.
+
+
+ 52. WAQTD THE MAXIMUM SAL AND MINIMUM SALARY GIVEN TO THE EMP.
+ SELECT MAX(SAL),MIN(SAL)
+ FROM EMP;
++----------+-----------+
+| MIN(SAL) | MAX(SAL)  |
++----------+-----------+
+| 30000.00 | 500000.00 |
++----------+-----------+
+
+ 53. WAQTD THE MAXIMUM SALARY, TOTAL SALARY, AND AVG 
+SALARY FROM EMP TABLE.
+ SELECT MAX(SAL),SUM(SAL),AVG(SAL)
+    -> FROM EMP;
++-----------+------------+--------------+
+| MAX(SAL)  | SUM(SAL)   | AVG(SAL)     |
++-----------+------------+--------------+
+| 500000.00 | 1309000.00 | 87266.666667 |
++-----------+------------+--------------+
+
+ 54. WAQTD THE TOTAL SALARY GIVEN TO ALL THE SALESMAN.
+ SELECT SUM(SAL)
+    -> FROM EMP
+    -> WHERE JOB='SALESMAN';
++-----------+
+| SUM(SAL)  |
++-----------+
+| 130000.00 |
++-----------+
+
+ 55. WAQTD THE MAX SALARY AND MINIMUM SALARY GIVEN TO THE
+ EMPS WHOSE FNAME STARTS WITH S OR A.
+ SELECT MAX(SAL),MIN(SAL)
+ FROM EMP
+ WHERE FNAME LIKE 'S%' OR FNAME LIKE 'A%';
+
+ 56. WAQTD THE NUMBER OF EMPS WORKING IN THE COMPANY.
+SELECT COUNT(*)
+ FROM EMP;
+
+ 57. WAQTD THE BIRTH DATE OF THE ELDEST EMP.
+ SELECT MIN(DOB)
+ FROM EMP;
+
+ 58. WAQTD THE HIREDATE OF RECENTLY JOINED EMP.
+ SELECT MAX(DOJ)
+ FROM EMP;
+
+ 59. WAQTD THE NUMBER OF DIFFERENT JOB ROLES AVAILABLE IN
+ THE COMPANY.
+ SELECT COUNT(DISTINCT JOB)
+ FROM EMP;
+
+60. WAQTD THE NUMBER OF EMPS WORKING IN DEPT 113.
+ SELECT COUNT(*)
+ FROM EMP
+ WHERE DNO=113;
+
+ 61. WAQTD THE NUMBER OF EMPS WORKING IN DEPT 113, 112.
+ SELECT COUNT(*)
+ FROM EMP
+ WHERE DNO IN (113,112); 
+
+
+GROUP BY CLAUSE:
+================
+GROUP BY CLAUSE IS USED TO GROUP THE RECORDS.
+
+SYNTAX:
+SELECT AGGREGARE_FUNCTIONS/GROUP_BY_EXPRESSION
+FROM TABLE_NAME
+[WHERE FILTER_CONDITION]
+GROUP BY COLUMN_NAME;
+	  GROUP_BY_EXPRESSION
+
+CHARACTERISTICS OF GROUP BY CLAUSE:
+=====================================
+>IT EXECUTES ROW BY ROW.
+>GROUP BY CLAUSE EXCEUTES AFTER FROM CLAUSE IF THERE IS NO WHERE CLAUSE.
+>GROUP BY CLAUSE CONVERTS THE ROW RECORDS INTO GROUP RECORDS.
+>WE CAN PASS MULTIPLE COLUMN INSIDE GROUP BY CLAUSE.
+>AFTER THE EXECUTION OF GROUP BY CLAUSE,THE OTHER CLAUSE EXECUTES GROUP BY GROUP.
+>WE CAN DISPLAY ONLY AGGREGATE FUNCTION AND GROUP BY EXPRESSION.
+
+NOTE:THE COLUMNS WHICH IS PASSED INSIDE FROUP BY CLAUSE IS KNOWN AS GROUP_BY EXPRESSION.
+
+
+62.WAQTD THE NUMBER OF EMP WORKING IN EACH DEPT.
+	SELECT COUNT(*),DNO
+	FROM EMP
+	GROUP BY DNO;
+
+63.WAQTD THE NUMBER OF EMPLOYEES WORKING IN EACH JOB ROLE.
+	SELECT COUNT(*),JOB
+	FROM EMP
+	GROUP BY JOB;
+
+64.WAQTD THE MAX SAL ,MIN SAL GIVEN IN EVRERY DEPARTMENT.
+	SELECT MAX(SAL),MIN(SAL),DNO
+	FROM EMP
+	GROUP BY DNO;
+
+
+65.WAQTD THE DOJ OF FIRST EMP IN EVERY DEPT.
+	SELECT MIN(DOJ),DNO
+	FROM EMP
+	GROUP BY DNO;
+66.WAQTD THE NUMBER OF EMPS WHO ARE WORKING AS SALESMAN,MANAGER OR DISPATCHER IN EVERY DEPT.
+	SELECT COUNT(*),DNO
+	FROM EMP
+	WHERE JOB IN('SALESMAN','MANAGER','DISPATCHER')
+	GROUP BY DNO;
+67.WAQTD THE NUMBER OF EMPS WHO ARE GETTING SAL MORE THAN 32000 AND SAL LESS THAN 150000 IN EACH DEPT.
+
+	SELECT COUNT(*),DNO
+	FROM EMP
+	WHERE SAL>32000 AND SAL<50000
+	GROUP BY DNO;
++----------+------+
+| COUNT(*) | DNO  |
++----------+------+
+|        2 |  110 |
+|        1 |  113 |
+|        3 |  111 |
++----------+------+
+
+***************************************************************************
+HAVING CLAUSE:
+===============
+HAVING CLAUSE IS USED TO FILTER THE GROUP RECORDS.
+
+SYNTAX:
+-------------
+SELECT AGGREGATE_FUNCTION/GROUP_BY_EXPTRESSION
+FROM TABLE_NAME
+[WHERE FILTER_CONDITION]
+GROUB BY COLUMN_NAME
+HAVING FILTER_GROUP_CONDITION;
+
+CHARACTERISTICS OF HAVING CLAUSE:
+==================================
+>HAVING CLAUSE EXECUTES GROUP BY GROUP.
+>IT IS USED TO FILTER THE GROUP CONDITION.
+>IT EXECUTES AFTER THE GROUP BY CLAUSE.
+>WE CAN PASS MULTIPLE GROUP CONDITIONS INSIDE HAVING CLAUSE.
+
+68.WAQTD THE MAX SAL GIVEN IN EACH DEPT IF THE SAL IS MORE THAN 40000 AND MAX SAL LESS THAN 150000.
+	SELECT MAX(SAL),DNO
+	FROM EMP
+	WHERE SAL>40000
+	GROUP BY DNO
+	HAVING MAX(SAL)<150000;
++-----------+------+
+| MAX(SAL)  | DNO  |
++-----------+------+
+| 100000.00 |  111 |
+| 120000.00 |  110 |
+|  45000.00 |  113 |
++-----------+------+
+	
+69.WAQTD THE NUMBER OF EMPS WORKING IN EACH DEPT IF THE DEPE AVG SAL IS MORE THAN 50000.
+	SELECT COUNT(*),DNO
+	FROM EMP
+	GROUP BY DNO
+	HAVING AVG(SAL)>50000;
++----------+------+
+| COUNT(*) | DNO  |
++----------+------+
+|        1 |  114 |
+|        3 |  112 |
+|        4 |  111 |
+|        4 |  110 |
++----------+------+
+70.WAQTD THE NUMBER OF EMPS WORKING IN EACH DEPT IF THE DEPT MIN SAL IS MORE THAN 30000 AND MAX SAL IS LESS THAN 100000.
+		
+	SELECT COUNT(*),DNO
+	FROM EMP
+	GROUP BY DNO
+	HAVING MIN(SAL)>30000 AND MAX(SAL)<100000;
+
+
+71.WAQTD THE NUMBER OF EMP IN EACH DEPT WHERE ATLEAST 4 MEMBERS  MUST BE WORKING IN THAT DEPT.
+
+SELECT COUNT(*),DNO
+FROM EMP
+GROUP BY DNO
+HAVING COUNT(*)>=4;
++----------+------+
+| COUNT(*) | DNO  |
++----------+------+
+|        4 |  111 |
+|        4 |  110 |
++----------+------+
+
+72.WAQTD THE NUMBER OF EMPS REPORTING TO EACH MANAGER.
+
+SELECT COUNT(*)
+FROM EMP
+WHERE MGR IS NOT NULL
+GROUP BY MGR;
+
++----------+
+| COUNT(*) |
++----------+
+|        4 |
+|        4 |
+|        3 |
+|        3 |
++----------+
+
+73.WAQTD THE NUMBER OF EMPS WHO ARE GET SAME SALARY.
+
+SELECT COUNT(*),SAL
+FROM EMP
+GROUP BY SAL
+HAVING COUNT(*)>1;
+
++---------------+----------+
+| num_employees | SAL      |
++---------------+----------+
+|             5 | 45000.00 |
+|             2 | 30000.00 |
+|             2 | 32000.00 |
++---------------+----------+
+
+74.WAQTD THE NUMBER OF EMPS WHO ARE GETTING SAME SALARY AND WORKING IN SAME DEPT
+
+
+SELECT COUNT(*),SAL,DNO
+FROM EMP
+GROUP BY SAL,DNO
+HAVING COUNT(*)>1;
++----------+----------+------+
+| COUNT(*) | SAL      | DNO  |
++----------+----------+------+
+|        2 | 45000.00 |  110 |
+|        2 | 45000.00 |  111 |
++----------+----------+------+
+
+==================================================================================
+ORDER BR CLAUSE
+-----------------
+IT IS USED TO ARRANGE THE RECORDS EITHER ASCENDING OR DESCENDING ORDER BASED ON A SPECIFIC COLUMN.
+
+SYNTAX:
+----------
+SELECT COLUMN_NAME
+FROM TABLE_NAME
+ORDER BY COLUMN_NAME ASC/DESC;
+
+
+CHARACTERISTICS OF ORDER BY CLAUSE
+*********************************************
+> IT IS THE LAST EXECUTABLE CLAUSE.
+> IT EXECUTES AFTRE THE SELECT CLAUSE.
+> BY DEFAULT ,ALL THE TABLES BY DEFAULT WILL BE ARRANGE BASED ON PRIMARY KEY.
+> WE CAN PASS MULTIPLE COLUMNS INSIDE ORDER BY CLAUSE.
+
+=====================================================================================
+
+75.WAQTD THE DETAILS OF EMP DISPLAY THE EMP DATA BASED ON THIER SALARY FROM MAXIMUM TO MINIMUM.
+
+SELECT *
+FROM EMP
+ORDER BY SAL DESC;
+
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME     | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1601 | SIDDARATH | PATIL     | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 |    NULL |  114 |  507 |
+| 1602 | HEMA      | SHETTY    | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1702 | SAMEER    | KHAN      | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1701 | RAHUL     | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1902 | ABHIJIT   | GOWDA     | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 1801 | JAHNAVI   | NAIK      | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1901 | SHIVANI   | RAI       | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 |    NULL |  113 |  502 |
+| 1903 | KARAN     | BHAT      | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI    | KRISHNAN  | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2101 | RASHMI    | GOWDA     | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2104 | AMAN      | RAI       | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
+| 2102 | FARIYA    | TAJ       | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA     | SHETTY    | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2002 | DHARANI   | PATIL     | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |
+| 2201 | KIRAN     | RAJ       | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+76. WAQTD THE FIRST NAME AND LAST NAME OF THE EMP WHO ARE WORKING AS SALESMAN ARRANGE THE RECORDS BASED ON THEIR FIRST NAME ALPHABETICALLY.
+ SELECT FNAME,LNAME, JOB
+    -> FROM EMP
+    -> WHERE JOB = 'SALESMAN'
+    -> ORDER BY FNAME;
++--------+-------+----------+
+| FNAME  | LNAME | JOB      |
++--------+-------+----------+
+| AMAN   | RAI   | SALESMAN |
+| KARAN  | BHAT  | SALESMAN |
+| RASHMI | GOWDA | SALESMAN |
++--------+-------+----------+
+
+77.WAQTD  THE NUMBER OF EMPS WHO ARE WORKING AS SALESMAN,MANAGER ,DEVELOPER OR DISPATCHER IN EVERY DEPT WHERE AVG SALARY OF THAT DEPT IS MORE THAN 30000.
+ARRANGE THE RECORDS BASED ON THE  NUMBER OF EMPS FROM MAX TO MIN.
+
+
+ SELECT COUNT(*),DNO
+    -> FROM EMP
+    -> WHERE JOB IN ('SALESMAN' ,'MANAGER','DEVELOPER','DISPATCHER')
+    -> GROUP BY DNO
+    -> HAVING AVG(SAL)>30000
+    -> ORDER BY COUNT(*) DESC;
++----------+------+
+| COUNT(*) | DNO  |
++----------+------+
+|        4 |  111 |
+|        4 |  110 |
+|        2 |  113 |
+-------------------
+ 
+==============================================================================
+LIMIT AND OFFSET
+
+
+LIMIT IS USED TO RETURN THE SPECIFIED NUMBER OF RECORDS. 
+
+SYNTAX: LIMIT  NO_OF_ROWS TO BE RETURNED
+
+OFFSET 
+
+OFFSET IS USED TO REMOVE THE SPECIFIED NUMBER OF RECORDS.
+
+=================================================================================
+78.WAQTD THE TOP 5 RECORDS FROM EMP TABLE.
+
+> SELECT *
+    -> FROM EMP
+    -> LIMIT 5;
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME     | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1601 | SIDDARATH | PATIL     | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 |    NULL |  114 |  507 |
+| 1602 | HEMA      | SHETTY    | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1701 | RAHUL     | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1702 | SAMEER    | KHAN      | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1801 | JAHNAVI   | NAIK      | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
++------+-----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+
+79.WAQTD THE TOP 3 RECORDS FROM EMP
+
+
+mysql> SELECT * FROM EMP
+    -> LIMIT 3;
++------+-----------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+| EID  | FNAME     | LNAME     | DOB        | GENDER | JOB     | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-----------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+| 1601 | SIDDARATH | PATIL     | 1985-11-24 | M      | CEO     | NULL | 2016-10-20 | 500000.00 | NULL |  114 |  507 |
+| 1602 | HEMA      | SHETTY    | 1996-03-20 | F      | HR      | 1601 | 2016-10-20 | 150000.00 | NULL |  112 |  507 |
+| 1701 | RAHUL     | MUKHARJEE | 1991-02-19 | M      | MANAGER | 1602 | 2017-04-17 | 100000.00 | NULL |  111 | NULL |
++------+-----------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+
+80.WAQTD THE 1ST RECORD FROM EMP TABLE
+
+SELECT *
+FROM EMP
+LIMIT 1;
+    
++------+-----------+-------+------------+--------+-----+------+------------+-----------+------+------+------+
+| EID  | FNAME     | LNAME | DOB        | GENDER | JOB | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-----------+-------+------------+--------+-----+------+------------+-----------+------+------+------+
+| 1601 | SIDDARATH | PATIL | 1985-11-24 | M      | CEO | NULL | 2016-10-20 | 500000.00 | NULL |  114 |  507 |
++------+-----------+-------+------------+--------+-----+------+------------+-----------+------+------+------+
+
+
+81.WAQTD THE 2ND RECORD FROM EMP TABLE.
+
+ SELECT *
+    -> FROM EMP
+    -> LIMIT 1 OFFSET 1;
++------+-------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+| EID  | FNAME | LNAME  | DOB        | GENDER | JOB | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+| 1602 | HEMA  | SHETTY | 1996-03-20 | F      | HR  | 1601 | 2016-10-20 | 150000.00 | NULL |  112 |  507 |
++------+-------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+
+
+82.WAQTD THE 10TH RECORD FROM THE EMP TABLE
+
+> SELECT *
+    -> FROM EMP
+    -> LIMIT 1 OFFSET 9;
++------+---------+-------+------------+--------+-----------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME | DOB        | GENDER | JOB       | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+-------+------------+--------+-----------+------+------------+----------+---------+------+------+
+| 2002 | DHARANI | PATIL | 1998-11-10 | F      | DEVELOPER | 1601 | 2021-06-20 | 30000.00 | 3000.00 |  113 | NULL |
++------+---------+-------+------------+--------+-----------+------+------------+----------+---------+------+------+
+
+
+83.WAQTD THE SECOND MAXIMUM SAL.
+
+SELECT SAL
+FROM EMP
+ORDER BY SAL DESC
+LIMIT 1 OFFSET 1;
++-----------+
+| SAL       |
++-----------+
+| 150000.00 |
++-----------+
+
+
+84.WAQTD THE SECOND MINI SAL
+
+SELECT DISTINCT SAL
+FROM EMP
+ORDER BY SAL ASC
+LIMIT 1 OFFSET 1;
+
+
+85.WAQTD THE 6TH MIN SAL.
+ SELECT DISTINCT SAL
+    -> FROM EMP
+    -> ORDER BY SAL ASC
+    -> LIMIT 1 OFFSET 5;
++-----------+
+| SAL       |
++-----------+
+| 100000.00 |
++-----------+
+
+86.WAQTD THE LAST 5 RECORDS FROM EMP TABLES
+ SELECT *
+    -> FROM EMP
+    -> ORDER BY EID DESC
+    -> LIMIT 5;
++------+--------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME  | LNAME  | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+--------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 2201 | KIRAN  | RAJ    | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 | 30000.00 | 3600.00 |  112 |  503 |
+| 2104 | AMAN   | RAI    | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 | 40000.00 |    NULL |  111 | NULL |
+| 2103 | PRIYA  | SHETTY | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 | 32000.00 | 3600.00 |  112 | NULL |
+| 2102 | FARIYA | TAJ    | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
+| 2101 | RASHMI | GOWDA  | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
++------+--------+--------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+
+
+87.WAQTD THE DETAILS OF EMP WHO JOINED SECOND IN THE COMPANY.
+
+ SELECT *
+    -> FROM EMP
+    -> ORDER BY DOJ ASC
+    -> LIMIT 1 OFFSET 1;
++------+-------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+| EID  | FNAME | LNAME  | DOB        | GENDER | JOB | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+| 1602 | HEMA  | SHETTY | 1996-03-20 | F      | HR  | 1601 | 2016-10-20 | 150000.00 | NULL |  112 |  507 |
++------+-------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+
+
+88.WAQTD THE 8TH MIN SAL.
+SELECT DISTINCT SAL
+FROM EMP
+ORDER BY SAL ASC
+LIMIT 1 OFFSET 5;
+
+===================================================================================
+CHARACTER FUNCTIONS 
+********************
+1.UPPER(): THIS FUNCTION IS USED TO CONVERT THE STRING VALUES TO UPPER CASE.
+SYNTAX: SELECT UPPER('PENTAGON');
+
+2.LOWER(): THIS FUNCTION IS USED TO CONVERT THE STRING VALUES TO LOWER CASE.
+SYNTAX:  SELECT LOWER('PENTAGON');
+
+3.LENGTH(): THIS FUNCTION USED TO OBTAIN THE LENGTH OF GIVEN STRING.
+SYNTAX: SELECT LENGTH('PENTAGON');
+
+4.REVERSE():THIS FUNCTION IS USED TO REVERSE THE GIVEN STRING.
+SYNTAX: SELECT REVERSE('PENTAGON');
+
+5.CONCAT(): THIS FUNCTION IS USED TO COMBINE THE GIVEN STRINGS.
+SYNTAX: CONCAT('STR1','STR2',...'STR N');
+*************************************************************************************
+
+89.WAQTD THE FULL NAME OF EMPS
+ SELECT CONCAT(FNAME,LNAME)
+    -> FROM EMP;
++---------------------+
+| CONCAT(FNAME,LNAME) |
++---------------------+
+| SIDDARATHPATIL      |
+| HEMASHETTY          |
+| RAHULMUKHARJEE      |
+| SAMEERKHAN          |
+| JAHNAVINAIK         |
+| SHIVANIRAI          |
+| ABHIJITGOWDA        |
+| KARANBHAT           |
+| MURALIKRISHNAN      |
+| DHARANIPATIL        |
+| RASHMIGOWDA         |
+| FARIYATAJ           |
+| PRIYASHETTY         |
+| AMANRAI             |
+| KIRANRAJ            |
++---------------------+
+
+90.WAQTD THE EMP NAME IN THE BELOW FORMAT.
+ 
+EMPDATA
+SIDDARTH, CEO
+
+ SELECT CONCAT(FNAME,', ',JOB) AS EMPDATA
+    -> FROM EMP;
++---------------------+
+| EMPDATA             |
++---------------------+
+| SIDDARATH, CEO      |
+| HEMA, HR            |
+| RAHUL, MANAGER      |
+| SAMEER, MANAGER     |
+| JAHNAVI, DISPATCHER |
+| SHIVANI, TESTER     |
+| ABHIJIT, DISPATCHER |
+| KARAN, SALESMAN     |
+| MURALI, DISPATCHER  |
+| DHARANI, DEVELOPER  |
+| RASHMI, SALESMAN    |
+| FARIYA, DEVELOPER   |
+| PRIYA, ACCOUNTANT   |
+| AMAN, SALESMAN      |
+| KIRAN, ACCOUNTANT   |
++---------------------+
+========================================================================================
+SUBSTRI() : THIS FUNCTION IS USED TO OBTAIN THE PART OF AGIVEN STRING.
+
+
+SYNTAX: SUBSTR('ORIGINAL_STRING'/COLUMN_NAME,POSITION[,LENGTH]);
+
+91.WAQTD THE DETAILS OF EMP IF NAME IS START WITH 'K' WITH OUT LIKE OPERATOR
+
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE SUBSTR(FNAME,1,1)='K';
++------+-------+-------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME | LNAME | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+-------+-------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1903 | KARAN | BHAT  | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 | 45000.00 |    NULL |  111 | NULL |
+| 2201 | KIRAN | RAJ   | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 | 30000.00 | 3600.00 |  112 |  503 |
++------+-------+-------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+92.WAQTD THE DETAILS OF EMP IF THE EMP LANME ENDS WITH A OR I.
+
+SELECT * 
+FROM EMP
+WHERE SUBSTR(LNAME,-1,1) IN ('A'  'I');
+
+
+93.WAQTD THE FNAME IN THE BELOW FORMAT.
+Siddarath
+
+SELECT CONCAT(UPPER(SUBSTR(FNAME,1,1)),(LOWER(SUBSTR(FNAME,2)))) AS FNAME
+FROM EMP;
++-----------------------------------------------------------+
+| CONCAT(UPPER(SUBSTR(FNAME,1,1)),(LOWER(SUBSTR(FNAME,2)))) |
++-----------------------------------------------------------+
+| Siddarath                                                 |
+| Hema                                                      |
+| Rahul                                                     |
+| Sameer                                                    |
+| Jahnavi                                                   |
+| Shivani                                                   |
+| Abhijit                                                   |
+| Karan                                                     |
+| Murali                                                    |
+| Dharani                                                   |
+| Rashmi                                                    |
+| Fariya                                                    |
+| Priya                                                     |
+| Aman                                                      |
+| Kiran                                                     |
++-----------------------------------------------------------+
+
+
+94.WAQTD THE FNAME,YEAR OF BIRTH OF THE EMPS.
+
+ SELECT FNAME,SUBSTR(DOB,1,4) AS "YEAR OF BIRTH"
+    -> FROM EMP;
++-----------+-----------------+
+| FNAME     | SUBSTR(DOB,1,4) |
++-----------+-----------------+
+| SIDDARATH | 1985            |
+| HEMA      | 1996            |
+| RAHUL     | 1991            |
+| SAMEER    | 1995            |
+| JAHNAVI   | 1996            |
+| SHIVANI   | 1998            |
+| ABHIJIT   | 1997            |
+| KARAN     | 1997            |
+| MURALI    | 1998            |
+| DHARANI   | 1998            |
+| RASHMI    | 1995            |
+| FARIYA    | 1999            |
+| PRIYA     | 1998            |
+| AMAN      | 1998            |
+| KIRAN     | 1999            |
++-----------+-----------------+
+
+95.WAQTD THE EMP FULL AND A PASSWORD FOR HIS CREDENTIALS
+THE PASSWORD MUST BE IN THE BELOW FORMAT
+FIRST 3 CHARACTERS OF HIS FNAME,LENGTH OF HIS LNAME ,LAST TWO CHARACTER OF HIS EMP ID,FOLLOWED BY LAST TWO CHARACTER OF YEAR BIRTH
+
+PASSWORD
+------------
+SID--> FIRST 3 CHARATERS  OF FNAME
+5--> LENGTH OF LNAME
+01-->LAST 2 DIGITS OF EID
+85-->LAST 2 DIGITS OF YOB
+
+
+SELECT CONCAT(FNAME,' ',LNAME) AS FULLNAME,CONCAT(SUBSTR(FNAME,1,3),LENGTH(LNAME),SUBSTR(EID,-2),SUBSTR(DOB,3,2)) AS PASSWORD
+    -> FROM EMP;
++----------------+----------+
+| FULLNAME       | PASSWORD |
++----------------+----------+
+| SIDDARATHPATIL | SID50185 |
+| HEMASHETTY     | HEM60296 |
+| RAHULMUKHARJEE | RAH90191 |
+| SAMEERKHAN     | SAM40295 |
+| JAHNAVINAIK    | JAH40196 |
+| SHIVANIRAI     | SHI30198 |
+| ABHIJITGOWDA   | ABH50297 |
+| KARANBHAT      | KAR40397 |
+| MURALIKRISHNAN | MUR80198 |
+| DHARANIPATIL   | DHA50298 |
+| RASHMIGOWDA    | RAS50195 |
+| FARIYATAJ      | FAR30299 |
+| PRIYASHETTY    | PRI60398 |
+| AMANRAI        | AMA30498 |
+| KIRANRAJ       | KIR30199 |
++----------------+----------+
+
+96.WAQTD THE FIRST HALF OF THE FNAME 
+
+
+
+mysql> SELECT SUBSTR(FNAME,1,LENGTH(FNAME)/2)
+    -> FROM EMP;
++---------------------------------+
+| SUBSTR(FNAME,1,LENGTH(FNAME)/2) |
++---------------------------------+
+| SIDDA                           |
+| HE                              |
+| RAH                             |
+| SAM                             |
+| JAHN                            |
+| SHIV                            |
+| ABHI                            |
+| KAR                             |
+| MUR                             |
+| DHAR                            |
+| RAS                             |
+| FAR                             |
+| PRI                             |
+| AM                              |
+| KIR                             |
++---------------------------------+
+
+97.WAQTD THE SECOND HALF OF THE FIRST NAME
+
+ SELECT SUBSTR(FNAME,LENGTH(FNAME)/2+1)
+    -> FROM EMP;
++---------------------------------+
+| SUBSTR(FNAME,LENGTH(FNAME)/2+1) |
++---------------------------------+
+| RATH                            |
+| MA                              |
+| UL                              |
+| EER                             |
+| AVI                             |
+| ANI                             |
+| JIT                             |
+| AN                              |
+| ALI                             |
+| ANI                             |
+| HMI                             |
+| IYA                             |
+| YA                              |
+| AN                              |
+| AN                              |
++---------------------------------+
+
+
+
+
+98.WAQTD THE FIRST HALF OF FNAME IN LOWER CASE AND SECOND HALF OF FNAME IN UPPER REVERSE CASE.
+
+ SELECT CONCAT(LOWER(SUBSTR(FNAME,1,LENGTH(FNAME)/2)),REVERSE(SUBSTR(FNAME,LENGTH(FNAME)/2+1))) REVERSE
+    -> FROM EMP;
++-----------+
+| REVERSE   |
++-----------+
+| siddaHTAR |
+| heAM      |
+| rahLU     |
+| samREE    |
+| jahnIVA   |
+| shivINA   |
+| abhiTIJ   |
+| karNA     |
+| murILA    |
+| dharINA   |
+| rasIMH    |
+| farAYI    |
+| priAY     |
+| amNA      |
+| kirNA     |
++-----------+
+
+99.WAQTD THE FNAME ,LNAME AND FIRST CHARACTERS OF THEIR JOB ROLE.
+
+SELECT FNAME,LNAME,SUBSTR(JOB,1,3) JOB_ROLE
+    -> FROM EMP;
++-----------+-----------+----------+
+| FNAME     | LNAME     | JOB_ROLE |
++-----------+-----------+----------+
+| SIDDARATH | PATIL     | CEO      |
+| HEMA      | SHETTY    | HR       |
+| RAHUL     | MUKHARJEE | MAN      |
+| SAMEER    | KHAN      | MAN      |
+| JAHNAVI   | NAIK      | DIS      |
+| SHIVANI   | RAI       | TES      |
+| ABHIJIT   | GOWDA     | DIS      |
+| KARAN     | BHAT      | SAL      |
+| MURALI    | KRISHNAN  | DIS      |
+| DHARANI   | PATIL     | DEV      |
+| RASHMI    | GOWDA     | SAL      |
+| FARIYA    | TAJ       | DEV      |
+| PRIYA     | SHETTY    | ACC      |
+| AMAN      | RAI       | SAL      |
+| KIRAN     | RAJ       | ACC      |
++-----------+-----------+----------+
+
+
+100.WAQTD THE DETAILS OF EMPLOYEE WHO WERE HEIRED DURING OCTOBER NOV DEC USING SUBSTRING FUNCTION.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE SUBSTR(DOJ,6,2) IN (10,11,12);
++------+-----------+--------+------------+--------+------------+------+------------+-----------+------+------+------+
+| EID  | FNAME     | LNAME  | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-----------+--------+------------+--------+------------+------+------------+-----------+------+------+------+
+| 1601 | SIDDARATH | PATIL  | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 | NULL |  114 |  507 |
+| 1602 | HEMA      | SHETTY | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 | NULL |  112 |  507 |
+| 1901 | SHIVANI   | RAI    | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 | NULL |  113 |  502 |
+| 1902 | ABHIJIT   | GOWDA  | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 | NULL |  110 |  505 |
+| 1903 | KARAN     | BHAT   | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 | NULL |  111 | NULL |
+| 2104 | AMAN      | RAI    | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 | NULL |  111 | NULL |
++------+-----------+--------+------------+--------+------------+------+------------+-----------+------+------+------+
+
+
+===================================================================================
+REPLACE()
+-----------
+THIS FUNCTION IS USED TO REPLACE THE SUBSTR WITH A NEW STR FROM THE ORIGINAL STRING.
+
+SYNTAX:REPLACE('ORIGINAL_STRING','SUBSTR','NEW_STR');
+
+
+INPUT 1 -->'MALAYALAM'  'SANJAY'
+INPUT 2-->'A' N
+OUTPUT--> 4   1
+
+SELECT LENGTH('MALAYALAM')-LENGTH(REPLACE('MALAYALAM','A','');
+
+
+
+101.WAQTD THE DETAILS OF EMP WHOSE FNAME CONTAINS ATLEAST 1 E IN IT WITHOUT USING LIKE OPERATOR.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE LENGTH(FNAME)-LENGTH(REPLACE(FNAME,'E',''))>=1;
++------+--------+--------+------------+--------+---------+------+------------+-----------+------+------+------+
+| EID  | FNAME  | LNAME  | DOB        | GENDER | JOB     | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+--------+--------+------------+--------+---------+------+------------+-----------+------+------+------+
+| 1602 | HEMA   | SHETTY | 1996-03-20 | F      | HR      | 1601 | 2016-10-20 | 150000.00 | NULL |  112 |  507 |
+| 1702 | SAMEER | KHAN   | 1995-04-20 | M      | MANAGER | 1602 | 2017-07-07 | 120000.00 | NULL |  110 | NULL |
++------+--------+--------+------------+--------+---------+------+------------+-----------+------+------+------+
+
+
+
+102.WAQTD THE DETAILS OF EMP FNAME CONTAINS  ATLEAST 2A IN IT WITHOUT USING LIKE OPERATOR
+
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE LENGTH(FNAME)-LENGTH(REPLACE(FNAME,'A',''))>=2;
++------+-----------+-------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME     | LNAME | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+-----------+-------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1601 | SIDDARATH | PATIL | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 |    NULL |  114 |  507 |
+| 1801 | JAHNAVI   | NAIK  | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1903 | KARAN     | BHAT  | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2002 | DHARANI   | PATIL | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |
+| 2102 | FARIYA    | TAJ   | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |
+| 2104 | AMAN      | RAI   | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
++------+-----------+-------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+103.WAQT THE DETAILS OF EMP WHOSE FNAME CONTAINS EXCATLY 1A IN IT.
+
+
+ SELECT *
+    -> FROM EMP
+    ->  WHERE LENGTH(FNAME)-LENGTH(REPLACE(FNAME,'A',''))=1;
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME   | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1602 | HEMA    | SHETTY    | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1701 | RAHUL   | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1702 | SAMEER  | KHAN      | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1901 | SHIVANI | RAI       | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 |    NULL |  113 |  502 |
+| 1902 | ABHIJIT | GOWDA     | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 2001 | MURALI  | KRISHNAN  | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2101 | RASHMI  | GOWDA     | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2103 | PRIYA   | SHETTY    | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2201 | KIRAN   | RAJ       | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+
+NUMBER FUNCTIONS
+========================
+ABS(): THIS FUNCTION IS USED TO CONVERT THE NEGATIVE NUMBERS INTO POSITIVE NUMBERS.
+SUNTAX: ABS(M);
+EX:SELECT ABS(-20);
+
+
+MOD(): THIS FUNCTION IS USED TO OBTAIN THE REMAINDER OF THE GIVEN TWO NUMBERS.
+SYNTAX:MOD(M,N);
+EX:SELECT MOD(4,2);
+
+ROUND():THIS FUNCTION IS USED TO ROUND OFF THE GIVEN FLOATING VALUES.
+SYNTAX:ROUND(M,N);
+EX:SELECT ROUND(4.79);
+
+CEIL:THIS FUNCTION IS USED TO OBTAIN THE NEXT INTEGER VALUE FROM THE GIVEN DECIMAL NUMBER.
+
+FLOOR(): THIS FUNCTION IS USED TO OBTAIN THE CURRENT INTEGER VALUE FROM THE GIVEN DECIMAL NUMBER.
+
+POW():THIS FUNCTION IS USED TO OBTAIN THE POWER OF THE GIVEN NUMBER .IT TAKES THE INTEGER VALUE AND THE DEGREE VALUE AS A  ARGUEMENT.
+EX:SELECT POW(3,4);  
+
+
+104.WAQTD THE AVG SALARY GIVEN IN EVERY DEPT ROUND OFF THE VALUE TO 100S PLACE.
+
+
+SELECT DNO,ROUND(AVG(SAL),-2)
+    -> FROM EMP
+    -> GROUP BY DNO;
++------+--------------------+
+| DNO  | ROUND(AVG(SAL),-2) |
++------+--------------------+
+|  114 |             500000 |
+|  112 |              70700 |
+|  111 |              57500 |
+|  110 |              65000 |
+|  113 |              35700 |
++------+--------------------+
+
+
+DATE FUNCTIONS
+============================
+SYSDATE():THIS FUNCTION IS USED TO OBTAIN THE CURRENT DATE AND TIME.
+
+CURDATE():THIS FUNCTION IS USED TO OBTAIN THE CURRENT DATE.
+
+DATEDIFF():THIS FUNCTION IS USED TO OBTAIN THE DIFFERENCES BETWEEN TWO DATES.
+SYNTAX:SELECT DATEDIFF(CURDATE(),'2024-09-01');
+
+DATE_ADD():THIS FUNCTION IS USED TO ADD THE TIME DURATION BASED ON THE INTERVAL.
+SYNTAX: DATE_ADD(DATE_VALUE, INTERVAL TIME_DUR);
+
+SELECT DATE_ADD(SYSDATE(),INTERVAL 2 SECOND);
+
+DATE_SUB():THIS FUNCTION IS USED TO SUBSTRACT THE TIME DURATION BASED ON THE INTERVAL.
+
+SYNTAX:DATE_SUB(DATE_VALUE,INTERVAL TIME_DUR);
+
+SELECT DATE_SUB(SYSDATE(),INTERVAL 2 YEAR);
+
+
+DATE_FORMAT():THIS FUNCTION IS USED TO CONVERT THE DATE VALUES INTO INDIVIDUAL CHARACTERS BASEDON FORMAT MODEL.
+
+SYNTAX:DATE_FORMAT(DATE_VALUE,'FORMAT_MODEL');
+=====================================================================================================================
+
+
+
+
+105.WAQTD THE DETAILS OF EMP WHO WERE HIRED IN THE YEAR 2020 USING DATE_FORMAT().
+
+SELECT *
+FROM EMP
+WHERE DATE_FORMAT(DOJ,'%Y')=2020;
+
+OR 
+
+
+SELECT *
+FROM EMP
+WHERE YEAR(DOJ)=2020;
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+106.WAQTD THE EMP FNAME ,LNAME DOB IF THE EMP WERE JOINED IN THE MONTH OF MAY,JUN OR JULY
+
+ SELECT FNAME,LNAME,DOB
+    -> FROM EMP
+    -> WHERE MONTH(DOJ) IN(06,07,08);
++---------+-------+------------+
+| FNAME   | LNAME | DOB        |
++---------+-------+------------+
+| SAMEER  | KHAN  | 1995-04-20 |
+| DHARANI | PATIL | 1998-11-10 |
+| KIRAN   | RAJ   | 1999-09-21 |
++---------+-------+------------+
+
+107.WAQTD THE DETAILS OF EMP WHO HIRED IN THE MONTH OF DEC OR JAN.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE MONTH(DOJ) IN (12,01);
++------+---------+-------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+-------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1901 | SHIVANI | RAI   | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 | 45000.00 |    NULL |  113 |  502 |
+| 1902 | ABHIJIT | GOWDA | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 | 50000.00 |    NULL |  110 |  505 |
+| 1903 | KARAN   | BHAT  | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 | 45000.00 |    NULL |  111 | NULL |
+| 2101 | RASHMI  | GOWDA | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
+| 2104 | AMAN    | RAI   | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 | 40000.00 |    NULL |  111 | NULL |
++------+---------+-------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+
+108.WAQTD THE EMP FULLNAME ALONG  WITH DATE OF BIRTH IN THE BELOW FORMAT.
+
+FULLNAME                       DATE OF BIRTH
+SIDDARTH PATIL                 NOVEMBER 24,1995
+
+
+
+SELECT CONCAT(FNAME,LNAME) FULLNAME,DATE_FORMAT(DOB,'%M %D,%Y')
+    -> FROM EMP;
++---------------------+-----------------------------+
+| CONCAT(FNAME,LNAME) | DATE_FORMAT(DOB,'%M %D,%Y') |
++---------------------+-----------------------------+
+| SIDDARTHPATIL       | November 24th,1985          |
+| HEMASHETTY          | March 20th,1996             |
+| RAHULMUKHARJEE      | February 19th,1991          |
+| SAMEERKHAN          | April 20th,1995             |
+| JAHNAVINAIK         | April 11th,1996             |
+| SHIVANIRAI          | November 7th,1998           |
+| ABHIJITGOWDA        | December 25th,1997          |
+| KARANBHAT           | December 26th,1997          |
+| MURALIKRISHNAN      | June 8th,1998               |
+| DHARANIPATIL        | November 10th,1998          |
+| RASHMIGOWDA         | October 3rd,1995            |
+| FARIYATAJ           | January 3rd,1999            |
+| PRIYASHETTY         | March 20th,1998             |
+| AMANRAI             | August 15th,1998            |
+| KIRANRAJ            | September 21st,1999         |
++---------------------+-----------------------------+
+
+109.WAQTD THE DETAILS OF EMP WHO WERE HIRED ON EVEN YEARS
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE (YEAR(DOJ))%2=0;
++------+----------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME    | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+----------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1601 | SIDDARTH | PATIL    | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 |    NULL |  114 |  507 |
+| 1602 | HEMA     | SHETTY   | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1801 | JAHNAVI  | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2001 | MURALI   | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2201 | KIRAN    | RAJ      | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+----------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+ 
+
+110.WAQTD THE DETAILS OF EMP WHO WERE HIRED ON FRI SAT OR SUN
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE DATE_FORMAT(DOJ,'%a') in ('FRI','SAT','SUN');
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1702 | SAMEER  | KHAN     | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1902 | ABHIJIT | GOWDA    | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2002 | DHARANI | PATIL    | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |
+| 2101 | RASHMI  | GOWDA    | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2103 | PRIYA   | SHETTY   | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2104 | AMAN    | RAI      | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
+| 2201 | KIRAN   | RAJ      | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+
+111.WAQTD THE EMP FNAME,LNAME,DOB IN US FORMAT.
+ SELECT FNAME,LNAME, DATE_FORMAT(DOB,'%M %D %Y')
+    -> FROM EMP;
++----------+-----------+-----------------------------+
+| FNAME    | LNAME     | DATE_FORMAT(DOB,'%M %D %Y') |
++----------+-----------+-----------------------------+
+| SIDDARTH | PATIL     | November 24th 1985          |
+| HEMA     | SHETTY    | March 20th 1996             |
+| RAHUL    | MUKHARJEE | February 19th 1991          |
+| SAMEER   | KHAN      | April 20th 1995             |
+| JAHNAVI  | NAIK      | April 11th 1996             |
+| SHIVANI  | RAI       | November 7th 1998           |
+| ABHIJIT  | GOWDA     | December 25th 1997          |
+| KARAN    | BHAT      | December 26th 1997          |
+| MURALI   | KRISHNAN  | June 8th 1998               |
+| DHARANI  | PATIL     | November 10th 1998          |
+| RASHMI   | GOWDA     | October 3rd 1995            |
+| FARIYA   | TAJ       | January 3rd 1999            |
+| PRIYA    | SHETTY    | March 20th 1998             |
+| AMAN     | RAI       | August 15th 1998            |
+| KIRAN    | RAJ       | September 21st 1999         |
++----------+-----------+-----------------------------+
+
+112.WAQTD THE NUMBER OF EMPS HIRED EVERY YEAR.
+(HINT :THE RECORDS HAS TO BE GROUPED BASED ON YEARS)
+
+ SELECT COUNT(YEAR(DOJ)),YEAR(DOJ)
+    -> FROM EMP
+    -> GROUP BY YEAR(DOJ);
++------------------+-----------+
+| COUNT(YEAR(DOJ)) | YEAR(DOJ) |
++------------------+-----------+
+|                2 |      2016 |
+|                2 |      2017 |
+|                2 |      2020 |
+|                3 |      2019 |
+|                5 |      2021 |
+|                1 |      2022 |
++------------------+-----------+
+
+113.WAQTD THE EMP FNAME AND THE YEARS OF EXPERIENCCE HE HAS OBTAINED TILL NOW
+ SELECT FNAME,DATE_FORMAT(SYSDATE(),'%Y')-DATE_FORMAT(DOJ,'%Y')
+    -> FROM EMP;
++----------+---------------------------------------------------+
+| FNAME    | DATE_FORMAT(SYSDATE(),'%Y')-DATE_FORMAT(DOJ,'%Y') |
++----------+---------------------------------------------------+
+| SIDDARTH |                                                 8 |
+| HEMA     |                                                 8 |
+| RAHUL    |                                                 7 |
+| SAMEER   |                                                 7 |
+| JAHNAVI  |                                                 4 |
+| SHIVANI  |                                                 5 |
+| ABHIJIT  |                                                 5 |
+| KARAN    |                                                 5 |
+| MURALI   |                                                 4 |
+| DHARANI  |                                                 3 |
+| RASHMI   |                                                 3 |
+| FARIYA   |                                                 3 |
+| PRIYA    |                                                 3 |
+| AMAN     |                                                 3 |
+| KIRAN    |                                                 2 |
++----------+---------------------------------------------------+
+
+
+114.WAQTD THE DETAILS OF EMP WHO WERE HIRED DURING THE LEAP YEAR.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE DATE_FORMAT(DOJ,'%Y')%4=0;
+
+
+                    OR 
+SELECT *
+FROM EMP
+WHERE (MOD(DATE_FORMAT(DOJ,'%Y'),4)=0 OR MOD(DATE_FORMAT(DOJ,'%Y),400)=0) AND MOD(DATE_FORMAT(DOJ,'%Y'),100)!=0;
++------+----------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME    | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+----------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1601 | SIDDARTH | PATIL    | 1985-11-24 | M      | CEO        | NULL | 2016-10-20 | 500000.00 |    NULL |  114 |  507 |
+| 1602 | HEMA     | SHETTY   | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1801 | JAHNAVI  | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2001 | MURALI   | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
++------+----------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+115.WAQTD THE EMP FNAME ,SAL,COMM FROM EMP
+
++----------+-----------+---------+
+| FNAME    | SAL       | COMM    |
++----------+-----------+---------+
+| SIDDARTH | 500000.00 |    NULL |
+| HEMA     | 150000.00 |    NULL |
+| RAHUL    | 100000.00 |    NULL |
+| SAMEER   | 120000.00 |    NULL |
+| JAHNAVI  |  45000.00 | 1000.00 |
+| SHIVANI  |  45000.00 |    NULL |
+| ABHIJIT  |  50000.00 |    NULL |
+| KARAN    |  45000.00 |    NULL |
+| MURALI   |  45000.00 | 1000.00 |
+| DHARANI  |  30000.00 | 3000.00 |
+| RASHMI   |  45000.00 | 3000.00 |
+| FARIYA   |  32000.00 | 3600.00 |
+| PRIYA    |  32000.00 | 3600.00 |
+| AMAN     |  40000.00 |    NULL |
+| KIRAN    |  30000.00 | 3600.00 |
++----------+-----------+---------+
+
+116.WAQTD THE EMP FNAME,SAL ADDED WITH COMM
+ SELECT FNAME,SAL+COMM
+ FROM EMP;
++----------+----------+
+| FNAME    | SAL+COMM |
++----------+----------+
+| SIDDARTH |     NULL |
+| HEMA     |     NULL |
+| RAHUL    |     NULL |
+| SAMEER   |     NULL |
+| JAHNAVI  | 46000.00 |
+| SHIVANI  |     NULL |
+| ABHIJIT  |     NULL |
+| KARAN    |     NULL |
+| MURALI   | 46000.00 |
+| DHARANI  | 33000.00 |
+| RASHMI   | 48000.00 |
+| FARIYA   | 35600.00 |
+| PRIYA    | 35600.00 |
+| AMAN     |     NULL |
+| KIRAN    | 33600.00 |
++----------+----------+
+
+OR 
+
+
+ SELECT FNAME,SAL+IFNULL(COMM,0)
+ FROM EMP;
++----------+--------------------+
+| FNAME    | SAL+IFNULL(COMM,0) |
++----------+--------------------+
+| SIDDARTH |          500000.00 |
+| HEMA     |          150000.00 |
+| RAHUL    |          100000.00 |
+| SAMEER   |          120000.00 |
+| JAHNAVI  |           46000.00 |
+| SHIVANI  |           45000.00 |
+| ABHIJIT  |           50000.00 |
+| KARAN    |           45000.00 |
+| MURALI   |           46000.00 |
+| DHARANI  |           33000.00 |
+| RASHMI   |           48000.00 |
+| FARIYA   |           35600.00 |
+| PRIYA    |           35600.00 |
+| AMAN     |           40000.00 |
+| KIRAN    |           33600.00 |
++----------+--------------------+
+
+WINDOWS FUNCTIONS
+=====================================
+1.IFNULL(ARG1,ARG2): IFNULL() IS USED TO OVERCOME THE PROBLEMS OF NULL.
+
+ARG1 --> THE COLUMN NAME WHERE THE NULL VALUES ARE PRESENT.
+ARG2 -->THE CHARACTER WHERE NULL HAS TO BE REPLACED WITH.
+
+
+SELECT FNAME,SAL,SAL+IFNULL(COMM,0) TOTAL
+FROM EMP;
+
+NOTE :THE VALUE WHICH WE PASS AS ARG2 MUST MATCH WITH COLUMN DATATYPE. 
+====================================================================================
+117.WAQTD THE EMP FULLNAME ALONG WITH THE SALARY ADDED WITH COMM IF THE EMP IS WORKING WITH DEPT 112 OR 113.
+
+ SELECT CONCAT(FNAME,LNAME),SAL+IFNULL(COMM,0)
+    -> FROM EMP
+    -> WHERE DNO IN(112,113);
++---------------------+--------------------+
+| CONCAT(FNAME,LNAME) | SAL+IFNULL(COMM,0) |
++---------------------+--------------------+
+| HEMASHETTY          |          150000.00 |
+| SHIVANIRAI          |           45000.00 |
+| DHARANIPATIL        |           33000.00 |
+| FARIYATAJ           |           35600.00 |
+| PRIYASHETTY         |           35600.00 |
+| KIRANRAJ            |           33600.00 |
++---------------------+--------------------+
+
+
+***************************************************************
+RANK() AND DENSE_RANK()
+====================================================================
+THESE FUNCTIONS ARE USED TO ASSIGN THE RANKS FOR EVERY ROW PRESENT IN THE TABLE BASED ON THE WINDOW CONDITION.
+
+RANK():RANK() ASSIGNS THE RANK OF THE CURRENT ROW NUMBER.
+SYNTAX: RANK() OVER(ORDER BY COLUMN_NAME ASC/DESC);
+
+DENSE_RANK(): DENSE_RANK() ASSIGN THE RANK FOLLOWING THE SEQUENCE OF THE RANKS.
+SYNTAX:DENSE_RANK() OVER(ORDER BY /PARTITION BY  COLUMN_NAME ASC/DESC);
+===============================================================================
+
+
+OVER(): THIS CLAUSE IS USED TO PASS THE WINDOW CONDITIONS . WE CA PASS OVER() IN TWO TYPES.
+
+1.ORDER BY: IT IS USED TO ARRANGE THE RECORDS EITHER ON ASCENDING OR DESCENDING ORDER.
+SYNTAX: WINDOW_FUCTION OVER(ORDER BY COLUMN_NAME ASC/DESC);
+
+2.PARTITION BY:IT IS USED TO DIVIDE THE RECORDS BASED ON CERTAIN COLUMN OR EXPRESSION.
+
+SYNTAX: WINDOW_FUNCTION OVER(PARTITION BY COLUMN _NAME/EXPRESSION);
+
+118.WAQTD THE EMP FNAME ,SAL ASSIGN THE RANKS BASED ON THEIR SALARY WITH NO GAPS IN THE RANK.  
+
+SELECT  FNAME,SAL ,DENSE_RANK OVER (ORDER BY SAL DESC) AS SAL
+FROM EMP;
++----------+-----+
+| FNAME    | SAL |
++----------+-----+
+| SIDDARTH |   1 |
+| HEMA     |   2 |
+| SAMEER   |   3 |
+| RAHUL    |   4 |
+| ABHIJIT  |   5 |
+| JAHNAVI  |   6 |
+| SHIVANI  |   6 |
+| KARAN    |   6 |
+| MURALI   |   6 |
+| RASHMI   |   6 |
+| AMAN     |   7 |
+| FARIYA   |   8 |
+| PRIYA    |   8 |
+| DHARANI  |   9 | 
+| KIRAN    |   9 |
++----------+-----+
+
+119.WAQTD THE FNAME,SAL.ASSIGN THE RANKS BASED ON THEIR SALARY WITH COMM WITH NO GAP IN THE RANK
+
+SELECT FNAME,SAL,DENSE_RANK() OVER(ORDER BY(SAL+IFNULL(COMM,0))DESC) TOTAL,SAL+IFNULL(COMM,0)
+FROM EMP;
++----------+-----------+-------+--------------------+
+| FNAME    | SAL       | TOTAL | SAL+IFNULL(COMM,0) |
++----------+-----------+-------+--------------------+
+| SIDDARTH | 500000.00 |     1 |          500000.00 |
+| HEMA     | 150000.00 |     2 |          150000.00 |
+| SAMEER   | 120000.00 |     3 |          120000.00 |
+| RAHUL    | 100000.00 |     4 |          100000.00 |
+| ABHIJIT  |  50000.00 |     5 |           50000.00 |
+| RASHMI   |  45000.00 |     6 |           48000.00 |
+| JAHNAVI  |  45000.00 |     7 |           46000.00 |
+| MURALI   |  45000.00 |     7 |           46000.00 |
+| SHIVANI  |  45000.00 |     8 |           45000.00 |
+| KARAN    |  45000.00 |     8 |           45000.00 |
+| AMAN     |  40000.00 |     9 |           40000.00 |
+| FARIYA   |  32000.00 |    10 |           35600.00 |
+| PRIYA    |  32000.00 |    10 |           35600.00 |
+| KIRAN    |  30000.00 |    11 |           33600.00 |
+| DHARANI  |  30000.00 |    12 |           33000.00 |
++----------+-----------+-------+--------------------+
+
+
+***********************************************************************
+ROW_NUMBER():THIS FUNCTION IS USED TO ASSIGN THE ROW NUMBER FOR EVERY ROW PRESENT IN THE RESULTANT TABLE.
+
+SYNTAX: ROW_NUMBER() OVER (ORDER BY/PARTITION BY COLUMN_NAME);
+
+LEAD(): THIS FUNCTION IS USED TO OBTAIN THE VALUE OF THE GIVEN COLUMN.
+
+SYNTAX: LEAD(COLUMN_NAME/EXP) OVER (ORDER BY/PARTITION BY COLUMN_NAME);
+
+LAG():THIS FUNCTION IS USED TO OBTAIN THE PREVIOUS VALUE OF GIVEN COLUMN.
+
+SYNTAX: LAG(COLUMN_NAME/EXP) OVER (ORDER BY/PARTITION BY COLUMN_NAME);
+************************************************************************
+120.WAQTD THE FNAME,LNAME,DNO,SERIAL NUMBERS FOR ALL THE EMPS WHO ARE  WORKING IN EVERY DEPT
+
+SELECT FNAME,LNAME,DNO,ROW_NUMBER() OVER(PARTITION BY DNO) SERIALNO
+FROM EMP;
++----------+-----------+------+----------+
+| FNAME    | LNAME     | DNO  | SERIALNO |
++----------+-----------+------+----------+
+| SAMEER   | KHAN      |  110 |        1 |
+| JAHNAVI  | NAIK      |  110 |        2 |
+| ABHIJIT  | GOWDA     |  110 |        3 |
+| MURALI   | KRISHNAN  |  110 |        4 |
+| RAHUL    | MUKHARJEE |  111 |        1 |
+| KARAN    | BHAT      |  111 |        2 |
+| RASHMI   | GOWDA     |  111 |        3 |
+| AMAN     | RAI       |  111 |        4 |
+| HEMA     | SHETTY    |  112 |        1 |
+| PRIYA    | SHETTY    |  112 |        2 |
+| KIRAN    | RAJ       |  112 |        3 |
+| SHIVANI  | RAI       |  113 |        1 |
+| DHARANI  | PATIL     |  113 |        2 |
+| FARIYA   | TAJ       |  113 |        3 |
+| SIDDARTH | PATIL     |  114 |        1 |
++----------+-----------+------+----------+
+
+121.WAQTD THE FNAME ,LNAME,SL_NO,MGR ID AND ASSIGN THE SL_NO BASED ON MANAGER ID
+
+SELECT ROW_NUMBER() OVER (PARTITION BY MGR) SLNO,FNAME,LNAME,MGR
+FROM EMP;
++------+----------+-----------+------+
+| SLNO | FNAME    | LNAME     | MGR  |
++------+----------+-----------+------+
+|    1 | SIDDARTH | PATIL     | NULL |
+|    1 | HEMA     | SHETTY    | 1601 |
+|    2 | SHIVANI  | RAI       | 1601 |
+|    3 | DHARANI  | PATIL     | 1601 |
+|    4 | FARIYA   | TAJ       | 1601 |
+|    1 | RAHUL    | MUKHARJEE | 1602 |
+|    2 | SAMEER   | KHAN      | 1602 |
+|    3 | PRIYA    | SHETTY    | 1602 |
+|    4 | KIRAN    | RAJ       | 1602 |
+|    1 | KARAN    | BHAT      | 1701 |
+|    2 | RASHMI   | GOWDA     | 1701 |
+|    3 | AMAN     | RAI       | 1701 |
+|    1 | JAHNAVI  | NAIK      | 1702 |
+|    2 | ABHIJIT  | GOWDA     | 1702 |
+|    3 | MURALI   | KRISHNAN  | 1702 |
++------+----------+-----------+------+
+
+
+122.WAQTD THE SHORTEST EMP FNAME FROM EMP TABLE .IF THE EMP HAS MORE THAN ONE VALUE WITH THE FNAME THEN FETCH THE FIRST RECORD THE FIRST RECORD WHICH COMES WHEN ORDERED ALPHABETICALLY.
+
+SELECT FNAME 
+FROM EMP
+ORDER BY LENGTH(FNAME) ASC,FNAME
+LIMIT 1;
+============================================================================================
+SUBQUERY
+---------
+A QUERY INSIDE ANOTHER QUERY IS KNOWN AS SUBQUERY.
+
+WORKING PRINCIPLE OF SUB QUERY
+--------------------------------------
+> SUB QUERY CONSISTING OF INNER QUERY AND OUTER QUERY.
+>ALWAYS INNER QUERY WILL EXECUTE FIRST AND GENERATES THE OUTPUT.
+> THE OUTPUT OF THE INNER QUERY WILL BE GIVEN AS  INPUT TO THE OUTER QUERY.
+> THE OUTER QUERY COLLECTS THE INPUT AND EXECUTES COMPLETELY TO GENERATE TTHE FINAL RESULT.
+> HERE,THE OUTER QUERY DEPENDS UPON THE INNER QUERY.
+
+RULES TO WRITE SUB QUERY
+--------------------------
+1.WHERE SAL>(SELECT FNAME - WRONG 
+DECIMAL=!VARCHAR
+
+WHERE SAL>(SELECT COMM-RIGHT
+DECIMAL = DECIMAL
+
+IN SUBQUERY, THE DATATYPES MUST MATCH BETWEEN INNER QUERY AND OUTER QUERY.
+
+2.WHERE SAL=(SELECT SAL,COMM -WRONG
+WHERE SAL=(SELECT SAL -RIGHT
+IN SUBQUERY,WE CAN PASS ONLY SINGLE COLUMN INSIDE THE INNER QUERY.
+
+WHEN OR WHERE WE CAN GO FOR SUB QUERY
+--------------------------------------
+CASE 1: WHENEVER WE COME ACROSS UNKNOWN VALUES ,WE GO FOR SUB QUERY.
+CASE 2: WHENEVER THE DATA IS IN ONE TABLE AND THE CONDITION WE PASS IS IN ANOTHER TABLE,WE GO FOR SUBQUERY.
+============================================================================================
+
+123.WAQTD THE FNAME ,SAL, OF A EMP WHO ARE GETTING SALARY MORE THAN AMAN.
+
+SELECT FNAME,SAL
+FROM EMP
+WHERE SAL>(SELECT SAL
+FROM EMP
+WHERE FNAME='AMAN');
++----------+-----------+
+| FNAME    | SAL       |
++----------+-----------+
+| SIDDARTH | 500000.00 |
+| HEMA     | 150000.00 |
+| RAHUL    | 100000.00 |
+| SAMEER   | 120000.00 |
+| JAHNAVI  |  45000.00 |
+| SHIVANI  |  45000.00 |
+| ABHIJIT  |  50000.00 |
+| KARAN    |  45000.00 |
+| MURALI   |  45000.00 |
+| RASHMI   |  45000.00 |
++----------+-----------+
+
+124.WAQTD THE DTAILS OF EMP WHO ARE WORKING IN THE SAME JOB ROLE AS KARAN'S JOB ROLE
+ SELECT *
+    -> FROM EMP
+    -> WHERE JOB=(SELECT JOB
+    -> FROM EMP
+    -> WHERE FNAME='KARAN');
++------+--------+-------+------------+--------+----------+------+------------+----------+---------+------+------+
+| EID  | FNAME  | LNAME | DOB        | GENDER | JOB      | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+--------+-------+------------+--------+----------+------+------------+----------+---------+------+------+
+| 1903 | KARAN  | BHAT  | 1997-12-26 | M      | SALESMAN | 1701 | 2019-12-26 | 45000.00 |    NULL |  111 | NULL |
+| 2101 | RASHMI | GOWDA | 1995-10-03 | F      | SALESMAN | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
+| 2104 | AMAN   | RAI   | 1998-08-15 | M      | SALESMAN | 1701 | 2021-12-26 | 40000.00 |    NULL |  111 | NULL |
++------+--------+-------+------------+--------+----------+------+------------+----------+---------+------+------+
+
+125.WAQTD THE EMP DETAILS WHO WERE HIRED AFTER SAMEER.
+ SELECT *
+    -> FROM EMP
+    -> WHERE DOJ>(SELECT DOJ
+    -> FROM EMP
+    -> WHERE FNAME='SAMEER');
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 1901 | SHIVANI | RAI      | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 | 45000.00 |    NULL |  113 |  502 |
+| 1902 | ABHIJIT | GOWDA    | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 | 50000.00 |    NULL |  110 |  505 |
+| 1903 | KARAN   | BHAT     | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 | 45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 2002 | DHARANI | PATIL    | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 | 30000.00 | 3000.00 |  113 | NULL |
+| 2101 | RASHMI  | GOWDA    | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA  | TAJ      | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA   | SHETTY   | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 | 32000.00 | 3600.00 |  112 | NULL |
+| 2104 | AMAN    | RAI      | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 | 40000.00 |    NULL |  111 | NULL |
+| 2201 | KIRAN   | RAJ      | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 | 30000.00 | 3600.00 |  112 |  503 |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+126.WAQTD THE EMP FNAME JOB ROLE IF EMP IS WORKING AS DISPATCHER AND GETTING SALARY MORE THAN DHARANI.
+ SELECT FNAME
+    -> FROM EMP
+    -> WHERE JOB ='DISPATCHER' AND SAL> (SELECT SAL
+    -> FROM EMP
+    -> WHERE FNAME='DHARANI');
++---------+
+| FNAME   |
++---------+
+| JAHNAVI |
+| ABHIJIT |
+| MURALI  |
++---------+
+
+127.WAQTD THE DETAILS OF EMP WHO IS WORKING IN SAME DEPT AS RAHUL'S DEPT AND GETTING SALARY LESS THAN SAMEER
+SELECT *
+FROM EMP
+WHERE DNO=(SELECT DNO
+FROM EMP
+WHERE FNAME='RAHUL' )AND SAL<(SELECT SAL
+FROM EMP
+WHERE FNAME='SAMEER');
++------+--------+-----------+------------+--------+----------+------+------------+-----------+---------+------+------+
+| EID  | FNAME  | LNAME     | DOB        | GENDER | JOB      | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+--------+-----------+------------+--------+----------+------+------------+-----------+---------+------+------+
+| 1701 | RAHUL  | MUKHARJEE | 1991-02-19 | M      | MANAGER  | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1903 | KARAN  | BHAT      | 1997-12-26 | M      | SALESMAN | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2101 | RASHMI | GOWDA     | 1995-10-03 | F      | SALESMAN | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2104 | AMAN   | RAI       | 1998-08-15 | M      | SALESMAN | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
++------+--------+-----------+------------+--------+----------+------+------------+-----------+---------+------+------+
+
+128.WAQTD THE DETAILS OF EMP WHO WERE HIRED AFTER THE FIRST EMP OF THE COMPANY.
+
+SELECT *
+FROM EMP
+WHERE DOJ>(SELECT MIN(DOJ)
+FROM EMP); 
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME   | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1701 | RAHUL   | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1702 | SAMEER  | KHAN      | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1801 | JAHNAVI | NAIK      | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1901 | SHIVANI | RAI       | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 |    NULL |  113 |  502 |
+| 1902 | ABHIJIT | GOWDA     | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 1903 | KARAN   | BHAT      | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI  | KRISHNAN  | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2002 | DHARANI | PATIL     | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |
+| 2101 | RASHMI  | GOWDA     | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA  | TAJ       | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA   | SHETTY    | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2104 | AMAN    | RAI       | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
+| 2201 | KIRAN   | RAJ       | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+129.WAQTD THE EMP FNAME ,DOJ OF THE EMP WHO WERE JOINED 3 YEARS LATER THAN SAMEER'S DOJ
+
+ SELECT FNAME ,DOJ
+    -> FROM EMP
+    -> WHERE DOJ>
+    -> (SELECT DATE_ADD(DOJ,INTERVAL 3 YEAR)
+    -> FROM EMP
+    -> WHERE FNAME='SAMEER');
++---------+------------+
+| FNAME   | DOJ        |
++---------+------------+
+| DHARANI | 2021-06-20 |
+| RASHMI  | 2021-01-02 |
+| FARIYA  | 2021-03-01 |
+| PRIYA   | 2021-05-01 |
+| AMAN    | 2021-12-26 |
+| KIRAN   | 2022-08-28 |
++---------+------------+
+
+130.WAQTD THE DETAILS EMP WHO ARE 10 YEARS OR MORE YOUNGER THAN SIDDARTH.
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE DOB >(SELECT DATE_ADD(DOB,INTERVAL 10 YEAR)
+    -> FROM EMP
+    -> WHERE FNAME='SIDDARTH');
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1602 | HEMA    | SHETTY   | 1996-03-20 | F      | HR         | 1601 | 2016-10-20 | 150000.00 |    NULL |  112 |  507 |
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1901 | SHIVANI | RAI      | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 |  45000.00 |    NULL |  113 |  502 |
+| 1902 | ABHIJIT | GOWDA    | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 1903 | KARAN   | BHAT     | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2002 | DHARANI | PATIL    | 1998-11-10 | F      | DEVELOPER  | 1601 | 2021-06-20 |  30000.00 | 3000.00 |  113 | NULL |
+| 2102 | FARIYA  | TAJ      | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA   | SHETTY   | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2104 | AMAN    | RAI      | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
+| 2201 | KIRAN   | RAJ      | 1999-09-21 | M      | ACCOUNTANT | 1602 | 2022-08-28 |  30000.00 | 3600.00 |  112 |  503 |
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+131.WAQTD THE DETAILS OF EMP WHO ARE GETTING SALARY MORE THAN KIRAN BUT LESS THAN RAHUL SAL
+
+ SELECT *
+    -> FROM EMP
+    -> WHERE  SAL>(SELECT SAL
+    -> FROM EMP
+    -> WHERE FNAME='KIRAN') AND SAL<(SELECT SAL
+    -> FROM EMP
+    -> WHERE FNAME='RAHUL');
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 1901 | SHIVANI | RAI      | 1998-11-07 | F      | TESTER     | 1601 | 2019-12-12 | 45000.00 |    NULL |  113 |  502 |
+| 1902 | ABHIJIT | GOWDA    | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 | 50000.00 |    NULL |  110 |  505 |
+| 1903 | KARAN   | BHAT     | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 | 45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 2101 | RASHMI  | GOWDA    | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
+| 2102 | FARIYA  | TAJ      | 1999-01-03 | F      | DEVELOPER  | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
+| 2103 | PRIYA   | SHETTY   | 1998-03-20 | F      | ACCOUNTANT | 1602 | 2021-05-01 | 32000.00 | 3600.00 |  112 | NULL |
+| 2104 | AMAN    | RAI      | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 | 40000.00 |    NULL |  111 | NULL |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+132.WAQTD THE  DETAILS OF EMP WHOSE FNAME STARTS  WITH VOWEL AND WHO ARE WORKING IN SAME DEPT AS SIDDARTH'S DEPT
+SELECT *
+FROM EMP
+WHERE SUBSTR(FNAME,1,1) IN ('A','E','I','O','U') AND
+DNO=(SELECT DNO
+FROM EMP
+WHERE FNAME='SIDDARTH');
+
+Empty set (0.00 sec)
+
+132.WAQTD THE FNAME ,SAL IF THE EMP IS GETTING SECOND MINIMUM SALARY.
+
+SELECT FNAME,SAL
+FROM EMP
+ORDER BY SAL DESC
+LIMIT 1 OFFSET 1;
+
+===================================================================================
+CREATE TABLE DEPARTMENT(
+DNO INT PRIMARY KEY,
+DNAME VARCHAR(20),
+LID  INT NULL
+);
+
+
+CREATE TABLE LOCATION(
+LID INT, 
+LOCATION VARCHAR(45),
+CITY VARCHAR(45),
+STATE VARCHAR(45)
+);
+
+CREATE TABLE CUSTOMER
+(
+CID INT,
+FIRST_NAME VARCHAR(45),
+LAST_NAME VARCHAR(45),
+LID INT NULL
+);
+
+CREATE TABLE ORDERS(
+ORDER_ID INT NOT NULL,
+PRODUCT_ID INT NOT NULL,
+ORDER_DATE DATE NOT NULL,
+DELIVERY_DATE DATE NOT NULL,
+EID INT NOT NULL,
+CID INT
+);
+
+CREATE TABLE PRODUCT(
+PRODUCT_ID INT NOT NULL,
+PNAME VARCHAR(45) NOT NULL,
+PRICE DECIMAL(12,2) NOT NULL
+);
+
+
+INSERT INTO DEPARTMENT VALUES (114,'HR',101);
+INSERT INTO DEPARTMENT VALUES (113,'IT',102);
+INSERT INTO DEPARTMENT VALUES (111,'MARKETING',103);
+INSERT INTO DEPARTMENT VALUES (110,'SALES',103);
+INSERT INTO DEPARTMENT VALUES (112,'FINANCE',101);
+
+
+INSERT INTO LOCATION VALUES(201,'KORMANGALA','BANGLORE','KARNATAKA');
+INSERT INTO LOCATION VALUES(202,'HITECH CITY','HYDERABAD','TELANGANA');
+INSERT INTO LOCATION VALUES(203,'T.NAGAR','CHENNAI','TAMIL NADU');
+INSERT INTO LOCATION VALUES(204,'PEELAMEDU','COIMBATOR','TAMIL NADU');
+INSERT INTO LOCATION VALUES(205,'FORT KOCHI','KOCHI','KERALA');
+INSERT INTO LOCATION VALUES(206,'JAYALAKSHMIPURAM','MYSORE','KARNATAKA');
+INSERT INTO LOCATION VALUES(207,'MVP COLONY','VISAKHAPATNAM','ANDHRA PRADESH');
+INSERT INTO LOCATION VALUES(208,'ALWARPET','CHENNAI','TAMIL NADU');
+INSERT INTO LOCATION VALUES(209,'CHANDRAGIRI','TIRUPATI','ANDHRA PRADESH');
+INSERT INTO LOCATION VALUES(210,'KOWDIAR','THIRUVANANTHPURAM','TAMIL NADU');
+INSERT INTO LOCATION VALUES(211,'GADAG ROAD','HUBLI','KARNATAKA');
+INSERT INTO LOCATION VALUES(212,'BENZ CIRCLE','VIJAYAWADA','KERALA');
+INSERT INTO LOCATION VALUES(213,'KONDALAMPATTI','SALEM','TAMIL NADU');
+INSERT INTO LOCATION VALUES(214,'VELLAYAMBALAM','TRIVANDRUM','KERALA');
+INSERT INTO LOCATION VALUES(215,'HANAMKONDA','WARANGAL','TELANGANA');
+
+
+
+
+
+-- Inserting values into CUSTOMER
+INSERT INTO CUSTOMER (CID, FIRST_NAME, LAST_NAME, LID) VALUES
+(501, 'Ravi', 'Kumar', 203),
+(502, 'Anjali', 'Nair', 205),
+(503, 'Priya', 'Rao', 201),
+(504, 'Arjun', 'Singh', 212),
+(505, 'Sneha', 'Menon', 206),
+(506, 'Kiran', 'Das', 204),
+(507, 'Deepak', 'Reddy', 213),
+(508, 'Nisha', 'Pillai', 202),
+(509, 'Vinay', 'Iyer', 210),
+(510, 'Meera', 'Suresh', 215),
+(511, 'Raghav', 'Rani', 209),
+(512, 'Lakshmi', 'Patil', 204),
+(513, 'Anand', 'Bhat', 207),
+(514, 'Kavya', 'Nair', 211),
+(515, 'Pranav', 'Shetty', 202),
+(516, 'Sita', 'Pillai', 205),
+(517, 'Mohan', 'Nambiar', 201),
+(518, 'Neha', 'Varma', 214),
+(519, 'Karthik', 'Menon', 213),
+(520, 'Riya', 'Iyer', 208);
+
+-- Inserting values into PRODUCT
+INSERT INTO PRODUCT (PRODUCT_ID, PNAME, PRICE) VALUES
+(1, 'Smartphone', 22999.00),
+(2, 'Laptop', 59999.00),
+(3, 'Headphones', 4499.00),
+(4, 'Smartwatch', 14999.00),
+(5, 'Tablet', 29999.00),
+(6, 'Bluetooth Speaker', 6499.00),
+(7, 'Camera', 37999.00),
+(8, 'External Hard Drive', 9999.00),
+(9, 'Monitor', 19999.00),
+(10, 'Keyboard', 2499.00),
+(11, 'Mouse', 1499.00),
+(12, 'Printer', 10999.00),
+(13, 'VR Headset', 29999.00),
+(14, 'Game Console', 22999.00),
+(15, 'USB Flash Drive', 999.00);
+
+-- Inserting values into ORDERS
+INSERT INTO ORDERS (ORDER_ID, PRODUCT_ID, ORDER_DATE, DELIVERY_DATE, EID, CID) VALUES
+(1111, 3, '2024-04-10', '2024-04-15', 101, 501),
+(1112, 1, '2024-04-12', '2024-04-18', 102, 502),
+(1113, 4, '2024-04-15', '2024-04-20', 101, 503),
+(1114, 2, '2024-04-20', '2024-04-25', 101, 504),
+(1115, 5, '2024-04-25', '2024-04-30', 104, 505),
+(1116, 1, '2024-05-01', '2024-05-06', 101, 506),
+(1117, 3, '2024-05-05', '2024-05-10', 102, 507),
+(1118, 4, '2024-05-10', '2024-05-15', 103, 508),
+(1119, 2, '2024-05-15', '2024-05-20', 104, 509),
+(1120, 6, '2024-05-20', '2024-05-25', 101, 510),
+(1121, 3, '2024-05-25', '2024-05-30', 102, 511),
+(1122, 2, '2024-06-01', '2024-06-06', 103, 512),
+(1123, 6, '2024-06-05', '2024-06-10', 104, 513),
+(1124, 1, '2024-06-10', '2024-06-15', 101, 514),
+(1125, 5, '2024-06-15', '2024-06-20', 102, 515),
+(1126, 1, '2024-06-20', '2024-06-25', 103, 501),
+(1127, 2, '2024-06-25', '2024-06-30', 104, 502),
+(1128, 3, '2024-07-01', '2024-07-05', 101, 503),
+(1129, 6, '2024-07-05', '2024-07-10', 102, 504),
+(1130, 7, '2024-07-10', '2024-07-15', 103, 505),
+(1131, 2, '2024-07-15', '2024-07-20', 104, 506),
+(1132, 3, '2024-07-20', '2024-07-25', 101, 507),
+(1133, 4, '2024-07-25', '2024-07-30', 102, 508),
+(1134, 3, '2024-08-01', '2024-08-05', 103, 509),
+(1135, 6, '2024-08-05', '2024-08-10', 104, 510);
+====================================================================================
+133.WAQTD THE DEPT NAME OF SIDDARTH.
+
+SELECT DNAME FROM DEPARTMENT WHERE DNO=(SELECT DNO
+    -> FROM EMP
+    -> WHERE FNAME='SIDDARTH');
++-------+
+| DNAME |
++-------+
+| HR    |
++-------+
+134.WAQTD THE DEPT DETAILS OF EMP WHOSE EID IS  1701.
+
+ SELECT *
+ FROM DEPARTMENT
+ WHERE DNO=(SELECT DNO
+ FROM EMP
+ WHERE EID='1701');
++-----+-----------+------+
+| DNO | DNAME     | LID  |
++-----+-----------+------+
+| 111 | MARKETING |  203 |
++-----+-----------+------+
+
+135.WAQTD THE DETAILS OF EMP WHO ARE WORKING IN SALES DEPT
+SELECT *
+    -> FROM EMP
+    -> WHERE DNO=(SELECT DNO
+    -> FROM DEPARTMENT
+    -> WHERE DNAME='SALES');
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1702 | SAMEER  | KHAN     | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1801 | JAHNAVI | NAIK     | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1902 | ABHIJIT | GOWDA    | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 2001 | MURALI  | KRISHNAN | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
++------+---------+----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+***********************************************************************************
+TYPES OF SUBQUERY():
+--------------
+1.SINGLE ROW SUBQUERY:
+------------------------
+WHENEVER THE SUBQUERY RETURNS ONE VALUE THEN IT IS KNOWN AS SINGLE ROW SUB QUERY.
+WE CAN USE NORMAL OPERATOR(=,!=,<,>,>=,<=)AS WELL AS SPECIAL OPERATOR(IN,NOT IN,ALL,ANY).
+
+2.MULTI ROW SUBQUERY:
+-------------------------
+WHENEVER THE SUBQUERY RETURNS MORE THAN ONE VALUE THEN IT IS KNOWN AS MULTI ROW SUB QUERY.HERE ,ONLY SPECIAL OPERATORS ARE USED.
+
+************************************************************************************
+136..WAQTD THE CUSTOMER FNAME ,LNAME WHO ARE LIVNG IN KARNATAKA
+ SELECT FIRST_NAME,LAST_NAME
+    -> FROM CUSTOMER
+    -> WHERE LID IN(SELECT LID
+    -> FROM LOCATION
+    -> WHERE STATE='KARNATAKA');
++------------+-----------+
+| FIRST_NAME | LAST_NAME |
++------------+-----------+
+| Priya      | Rao       |
+| Sneha      | Menon     |
+| Kavya      | Nair      |
+| Mohan      | Nambiar   |
++------------+-----------+
+
+137.WAQTD THE DETAILS OF EMP WHO ARE WORKING IN SALES OR MARKETING DEPT
+ SELECT *
+    -> FROM EMP
+    -> WHERE DNO IN(SELECT DNO
+    -> FROM DEPARTMENT
+    -> WHERE DNAME IN('SALES','MARKETING'));
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME   | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1701 | RAHUL   | MUKHARJEE | 1991-02-19 | M      | MANAGER    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1702 | SAMEER  | KHAN      | 1995-04-20 | M      | MANAGER    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1801 | JAHNAVI | NAIK      | 1996-04-11 | F      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1902 | ABHIJIT | GOWDA     | 1997-12-25 | M      | DISPATCHER | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 1903 | KARAN   | BHAT      | 1997-12-26 | M      | SALESMAN   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2001 | MURALI  | KRISHNAN  | 1998-06-08 | M      | DISPATCHER | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2101 | RASHMI  | GOWDA     | 1995-10-03 | F      | SALESMAN   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2104 | AMAN    | RAI       | 1998-08-15 | M      | SALESMAN   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+138.WAQTD THE LOCATIONS ,CITY ,STATE OF ALL THE DEPTS.DISPLAY THE COLUMN INBELOW FORMAT.
+
+ADDRESS:- LOCATION,CITY,STATE
+
+SELECT CONCAT(LOCATION,' , ',CITY,', ',STATE) ADDRESS
+    -> FROM LOCATION
+    -> WHERE LID IN(SELECT LID
+    -> FROM DEPARTMENT);
++------------------------------------+
+| ADDRESS                            |
++------------------------------------+
+| KORMANGALA , BANGLORE, KARNATAKA   |
+| HITECH CITY , HYDERABAD, TELANGANA |
+| T.NAGAR , CHENNAI, TAMIL NADU      |
++------------------------------------+
+
+139.WAQTD THE LOCATION OF THE CUSTOMERS IF THEIR LAST NAME IS IYER.
+
+
+FROM  LOCATION
+    -> WHERE LID IN(SELECT LID
+    -> FROM CUSTOMER
+    -> WHERE LAST_NAME='IYER');
++----------+
+| LOCATION |
++----------+
+| ALWARPET |
+| KOWDIAR  |
++----------+
+
+
+140.WAQTD THE WORKING LOCATION OF SIDDARTH.
+
+SELECT LOCATION
+FROM LOCATION
+WHERE LID IN (SELECT LID
+FROM DEPARTMENT
+WHERE DNO IN(SELECT DNO
+FROM EMP
+WHERE FNAME='SIDDARTH'));
++------------+
+| LOCATION   |
++------------+
+| KORMANGALA |
++------------+
+
+
+141.WAQTD THE DEPT NAME OF EMP WHO ARE GETTING SALARY MORE THAN KIRAN
+SELECT DNAME
+FROM DEPARTMENT
+WHERE DNO IN (SELECT DNO
+FROM EMP
+WHERE SAL>(SELECT SAL
+FROM EMP
+WHERE FNAME='KIRAN'));
+
++-----------+
+| DNAME     |
++-----------+
+| SALES     |
+| MARKETING |
+| FINANCE   |
+| IT        |
+| HR        |
++-----------+
+
+142.WAQTD THE DETALS OF EMP WHO ARE WORKING IN TELAGANA
+ SELECT *
+    -> FROM EMP
+    -> WHERE DNO IN(SELECT DNO
+    -> FROM DEPARTMENT
+    -> WHERE LID IN(SELECT LID
+    -> FROM LOCATION
+    -> WHERE STATE='TELANGANA'));
++------+---------+-------+------------+--------+-----------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME | DOB        | GENDER | JOB       | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+-------+------------+--------+-----------+------+------------+----------+---------+------+------+
+| 1901 | SHIVANI | RAI   | 1998-11-07 | F      | TESTER    | 1601 | 2019-12-12 | 45000.00 |    NULL |  113 |  502 |
+| 2002 | DHARANI | PATIL | 1998-11-10 | F      | DEVELOPER | 1601 | 2021-06-20 | 30000.00 | 3000.00 |  113 | NULL |
+| 2102 | FARIYA  | TAJ   | 1999-01-03 | F      | DEVELOPER | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
++------+---------+-------+------------+--------+-----------+------+------------+----------+---------+------+------+
+
+143.WAQTD THE DETAIS OF CUSTOMERS WHO HAVE NOT ORDERED AN PRODUCT.
+ SELECT *
+    -> FROM CUSTOMER
+    -> WHERE CID NOT IN (SELECT CID
+    -> FROM ORDERS
+    -> WHERE PRODUCT_ID IN (SELECT PRODUCT_ID
+    -> FROM PRODUCT));
++-----+------------+-----------+------+
+| CID | FIRST_NAME | LAST_NAME | LID  |
++-----+------------+-----------+------+
+| 504 | Arjun      | Singh     |  212 |
+| 513 | Anand      | Bhat      |  207 |
+| 516 | Sita       | Pillai    |  205 |
+| 517 | Mohan      | Nambiar   |  201 |
+| 518 | Neha       | Varma     |  214 |
+| 519 | Karthik    | Menon     |  213 |
+| 520 | Riya       | Iyer      |  208 |
++-----+------------+-----------+------+
+
+144.WAQTD THE CUSTOMER FULL NAME WHO HAS ORDERED SMARTPHONE
+SELECT CONCAT(FIRST_NAME,LAST_NAME)
+FROM CUSTOMER
+WHERE CID  IN (SELECT CID
+FROM ORDERS
+WHERE PRODUCT_ID IN (SELECT PRODUCT_ID
+FROM PRODUCT
+WHERE PNAME='SMARTPHONE'));
++------------------------------+
+| CONCAT(FIRST_NAME,LAST_NAME) |
++------------------------------+
+| AbhijitGowda                 |
+| VinayIyer                    |
++------------------------------+
+
+145.WAQTD THE  LOCATIONS OF CUSTOMER WHO HAS ORDER SMARTWATCH
+SELECT CONCAT(LOCATION,',',CITY,',',STATE) AS ADDRESS
+FROM LOCATION 
+WHERE LID IN (SELECT LID
+FROM CUSTOMER
+WHERE CID IN(SELECT CID
+FROM ORDERS
+WHERE PRODUCT_ID IN (SELECT PRODUCT_ID 
+FROM PRODUCT
+WHERE PNAME='SMARTWATCH')));
++---------------------------------+
+| ADDRESS                         |
++---------------------------------+
+| Koramangala,Bangalore,Karnataka |
+| Peelamedu,Coimbatore,Tamil Nadu |
++---------------------------------+
+
+146.WAQTD THE DETAILS OF CUSTOMER HAS ORDERED MORE THAN ONCE.
+
+
+SELECT *
+FROM CUSTOMER
+WHERE CID IN(SELECT CID
+FROM  ORDERS
+GROUP BY CID
+HAVING COUNT(*)>1);
+
++-----+------------+-----------+------+
+| CID | FIRST_NAME | LAST_NAME | LID  |
++-----+------------+-----------+------+
+| 502 | Shivani    | Rai       |  205 |
+| 503 | Kiran      | Raj       |  201 |
+| 505 | Abhijit    | Gowda     |  206 |
+| 508 | Nisha      | Pillai    |  202 |
+| 509 | Vinay      | Iyer      |  210 |
+| 510 | Meera      | Suresh    |  215 |
+| 511 | Raghav     | Rani      |  209 |
+| 512 | Lakshmi    | Patil     |  204 |
+| 515 | Pranav     | Shetty    |  202 |
++-----+------------+-----------+------+
+
+147.WAQTD THE DETAILS OF CUSTOMERS WHO ARE ALSO THE EMPLOYEES OF COMPANY.
+
+SELECT *
+FROM CUSTOMER
+WHERE CID IN(SELECT CID
+FROM EMP);
++-----+------------+-----------+------+
+| CID | FIRST_NAME | LAST_NAME | LID  |
++-----+------------+-----------+------+
+| 502 | Shivani    | Rai       |  205 |
+| 503 | Kiran      | Raj       |  201 |
+| 505 | Abhijit    | Gowda     |  206 |
+| 507 | Hema       | Shetty    |  213 |
++-----+------------+-----------+------+
+
+148.WAQTD DETAILS OF EMP WHO DELIVERS THE PRODUCT TO CHENNAI.
+
+SELECT *
+FROM EMP
+WHERE EID IN(SELECT EID
+FROM ORDERS
+WHERE CID IN (SELECT CID
+FROM CUSTOMER
+WHERE LID IN(SELECT LID
+FROM LOCATION
+WHERE CITY='CHENNAI')));
++------+---------+-------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+-------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | Jahnavi | Naik  | 1996-04-11 | F      | Dispatcher | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
++------+---------+-------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+149.WAQTD THE EMP FNAME ,SAL OF THE EMP IF EMP IS GETTING 2ND MINIMUM SALARY
+
+SELECT FNAME,SAL
+FROM EMP
+WHERE SAL =(SELECT DISTINCT SAL
+FROM EMP
+ORDER BY SAL ASC
+LIMIT 1 OFFSET 1);
++--------+----------+
+| FNAME  | SAL      |
++--------+----------+
+| Fariya | 32000.00 |
+| Priya  | 32000.00 |
++--------+----------+
+
+150.WAQTD THE TOP 5 MIN SALARY HOLDERS
+SELECT * FROM EMP WHERE SAL IN
+(SELECT SAL FROM 
+(SELECT DISTINCT SAL
+FROM EMP
+ORDER BY SAL ASC
+LIMIT 5)RES_TABLE);
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | Jahnavi | Naik     | 1996-04-11 | F      | Dispatcher | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 1901 | Shivani | Rai      | 1998-11-07 | F      | Tester     | 1601 | 2019-12-12 | 45000.00 |    NULL |  113 |  502 |
+| 1902 | Abhijit | Gowda    | 1997-12-25 | M      | Dispatcher | 1702 | 2019-12-28 | 50000.00 |    NULL |  110 |  505 |
+| 1903 | Karan   | Bhat     | 1997-12-26 | M      | Salesman   | 1701 | 2019-12-26 | 45000.00 |    NULL |  111 | NULL |
+| 2001 | Murali  | Krishnan | 1998-06-08 | M      | Dispatcher | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 2002 | Dharani | Patil    | 1998-11-10 | F      | Developer  | 1601 | 2021-06-20 | 30000.00 | 3000.00 |  113 | NULL |
+| 2101 | Rashmi  | Gowda    | 1995-10-03 | F      | Salesman   | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
+| 2102 | Fariya  | Taj      | 1999-01-03 | F      | Developer  | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
+| 2103 | Priya   | Shetty   | 1998-03-20 | F      | Accountant | 1602 | 2021-05-01 | 32000.00 | 3600.00 |  112 | NULL |
+| 2104 | Aman    | Rai      | 1998-08-15 | M      | Salesman   | 1701 | 2021-12-26 | 40000.00 |    NULL |  111 | NULL |
+| 2201 | Kiran   | Raj      | 1999-09-21 | M      | Accountant | 1602 | 2022-08-28 | 30000.00 | 3600.00 |  112 |  503 |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+151.WAQTD THE 3RD MAX TO 5TH MAX SAL HOLDER DATA
+SELECT *
+FROM EMP
+WHERE SAL IN(SELECT SAL FROM
+(SELECT DISTINCT SAL
+FROM EMP
+ORDER BY SAL DESC
+LIMIT 3 OFFSET 2)MAXX);
++------+---------+-----------+------------+--------+------------+------+------------+-----------+------+------+------+
+| EID  | FNAME   | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+------+------+------+
+| 1701 | Rahul   | Mukharjee | 1991-02-19 | M      | Manager    | 1602 | 2017-04-17 | 100000.00 | NULL |  111 | NULL |
+| 1702 | Sameer  | Khan      | 1995-04-20 | M      | Manager    | 1602 | 2017-07-07 | 120000.00 | NULL |  110 | NULL |
+| 1902 | Abhijit | Gowda     | 1997-12-25 | M      | Dispatcher | 1702 | 2019-12-28 |  50000.00 | NULL |  110 |  505 |
++------+---------+-----------+------------+--------+------------+------+------------+-----------+------+------+------+
+
+152.WAQTD THE DETAILS OF KIRANS MANAGER
+
+SELECT *
+FROM EMP
+WHERE EID IN(SELECT MGR FROM EMP
+WHERE FNAME='KIRAN');
++------+-------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+| EID  | FNAME | LNAME  | DOB        | GENDER | JOB | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+-------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+| 1602 | Hema  | Shetty | 1996-03-20 | F      | Hr  | 1601 | 2016-10-20 | 150000.00 | NULL |  114 |  507 |
++------+-------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+
+153.WAQTD THE FULL NAME OF KARAN'S MANAGER
+
+SELECT CONCAT(FNAME,LNAME) FULLNAME
+FROM EMP
+WHERE EID IN (SELECT MGR
+FROM EMP
+WHERE FNAME ='KARAN');
++----------------+
+| FULLNAME       |
++----------------+
+| RahulMukharjee |
++----------------+
+
+154.WAQTD THE  DEPT NAME OF AMAN'S MANAGER
+SELECT DNAME
+FROM DEPT
+WHERE DNO IN(SELECT DNO
+FROM EMP
+WHERE EID IN(SELECT MGR
+FROM EMP
+WHERE FNAME='AMAN'));
++-----------+
+| DNAME     |
++-----------+
+| Marketing |
++-----------+
+
+155.WAQTD THE WORKING LOCATION ,CITY,STATE AS ADDRESS OF DHARANI'S MANAGER.
+
+SELECT LOCATION,CITY,STATE
+FROM LOCATION
+WHERE LID IN(SELECT LID
+FROM DEPT
+WHERE DNO IN(SELECT DNO
+FROM EMP
+WHERE EID IN(SELECT MGR
+FROM EMP
+WHERE FNAME='DHARANI')));
++-------------+-----------+-----------+
+| LOCATION    | CITY      | STATE     |
++-------------+-----------+-----------+
+| Koramangala | Bangalore | Karnataka |
++-------------+-----------+-----------+
+
+156.WAQTD THE KIRANS MANAGER'S ,MANAGER DETAILS.
+SELECT *
+FROM EMP
+WHERE EID IN(SELECT MGR
+FROM EMP
+WHERE EID IN(SELECT MGR
+FROM EMP
+WHERE FNAME='KIRAN'));
++------+----------+-------+------------+--------+-----+------+------------+-----------+------+------+------+
+| EID  | FNAME    | LNAME | DOB        | GENDER | JOB | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+----------+-------+------------+--------+-----+------+------------+-----------+------+------+------+
+| 1601 | Siddarth | Patil | 1985-11-24 | M      | Ceo | NULL | 2016-01-16 | 500000.00 | NULL |  113 | NULL |
++------+----------+-------+------------+--------+-----+------+------------+-----------+------+------+------+
+
+157.WAQTD THE DETAILS OF EMP WHO ARE REPORTING TO SAMEER
+
+SELECT *
+FROM EMP
+WHERE MGR IN(SELECT EID
+FROM EMP
+WHERE FNAME='SAMEER');
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | Jahnavi | Naik     | 1996-04-11 | F      | Dispatcher | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 1902 | Abhijit | Gowda    | 1997-12-25 | M      | Dispatcher | 1702 | 2019-12-28 | 50000.00 |    NULL |  110 |  505 |
+| 2001 | Murali  | Krishnan | 1998-06-08 | M      | Dispatcher | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+158.WAQTD THE DEPT NAME EMP WHO ARE REPORTING TO HEMA
+
+SELECT DNAME
+FROM DEPT
+WHERE DNO IN(SELECT DNO
+FROM EMP
+WHERE MGR IN(SELECT EID
+FROM EMP
+WHERE FNAME='HEMA'));
++-----------+
+| DNAME     |
++-----------+
+| Marketing |
+| Sales     |
+| Finance   |
++-----------+
+
+159.WAQTD THE NUMBER OF EMP REPORING TO SIDDARTH
+SELECT COUNT(*)
+FROM EMP
+WHERE MGR IN(SELECT EID
+FROM EMP
+WHERE FNAME='SIDDARTH');
++----------+
+| COUNT(*) |
++----------+
+|        4 |
++----------+
+
+160.WAQTD THE DETAILS OF MANAGER WHO HAS ATLEAST 4 REPORTINGS.(ATLEAST 4 EMPS MUST BE REPORTING TP EMP).
+
+SELECT *
+FROM emp
+WHERE EID IN (SELECT MGR FROM EMP
+GROUP BY MGR
+HAVING COUNT(EID) >= 4);
++------+----------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+| EID  | FNAME    | LNAME  | DOB        | GENDER | JOB | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+----------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+| 1601 | Siddarth | Patil  | 1985-11-24 | M      | Ceo | NULL | 2016-01-16 | 500000.00 | NULL |  113 | NULL |
+| 1602 | Hema     | Shetty | 1996-03-20 | F      | Hr  | 1601 | 2016-10-20 | 150000.00 | NULL |  114 |  507 |
++------+----------+--------+------------+--------+-----+------+------------+-----------+------+------+------+
+
+
+161.WAQTD THE DETAILS OF EMP WHO ARE GETTING SALARY MORE THAN KIRAN.
+SELECT *
+FROM EMP
+WHERE SAL >(SELECT SAL
+FROM EMP
+WHERE FNAME='KIRAN');
++------+----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME    | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1601 | Siddarth | Patil     | 1985-11-24 | M      | Ceo        | NULL | 2016-01-16 | 500000.00 |    NULL |  113 | NULL |
+| 1602 | Hema     | Shetty    | 1996-03-20 | F      | Hr         | 1601 | 2016-10-20 | 150000.00 |    NULL |  114 |  507 |
+| 1701 | Rahul    | Mukharjee | 1991-02-19 | M      | Manager    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1702 | Sameer   | Khan      | 1995-04-20 | M      | Manager    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 1801 | Jahnavi  | Naik      | 1996-04-11 | F      | Dispatcher | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 1901 | Shivani  | Rai       | 1998-11-07 | F      | Tester     | 1601 | 2019-12-12 |  45000.00 |    NULL |  113 |  502 |
+| 1902 | Abhijit  | Gowda     | 1997-12-25 | M      | Dispatcher | 1702 | 2019-12-28 |  50000.00 |    NULL |  110 |  505 |
+| 1903 | Karan    | Bhat      | 1997-12-26 | M      | Salesman   | 1701 | 2019-12-26 |  45000.00 |    NULL |  111 | NULL |
+| 2001 | Murali   | Krishnan  | 1998-06-08 | M      | Dispatcher | 1702 | 2020-03-15 |  45000.00 | 1000.00 |  110 | NULL |
+| 2101 | Rashmi   | Gowda     | 1995-10-03 | F      | Salesman   | 1701 | 2021-01-02 |  45000.00 | 3000.00 |  111 | NULL |
+| 2102 | Fariya   | Taj       | 1999-01-03 | F      | Developer  | 1601 | 2021-03-01 |  32000.00 | 3600.00 |  113 | NULL |
+| 2103 | Priya    | Shetty    | 1998-03-20 | F      | Accountant | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
+| 2104 | Aman     | Rai       | 1998-08-15 | M      | Salesman   | 1701 | 2021-12-26 |  40000.00 |    NULL |  111 | NULL |
++------+----------+-----------+------------+-----------------------------------------------------------------------------+
+
+========================================================================
+ALL/ANY OPERATOR
+********************
+THESE OPERATOR ARE THE MULTIVALUED OPERATORS WHICH ACCPET SINGLE VALUE AT LHS AND MULTIPLE VALUES AT RHS.
+
+SYNTAX: COLUMN_NAME >/< ALL/ANY(V1,V2,V3..,VN);
+
+>ALL OPERATOR WORKS IN THE FORM OF AND OPERATOR.
+>ANY OPERATOR WORKS IN THE FORM OF OR OPERATOR.
+
+
+162.WAQTD THE DETAILS OF EMP WHO ARE GETTING SALARY MORE THAN ALL THE SALESMAN.
+SELECT *
+FROM EMP
+WHERE SAL > ALL (SELECT SAL
+FROM EMP
+WHERE JOB='SALESMAN');
+
+163.WAQTD THE DETAILS OF EMP WHO ARE GETTING SALARY MORE THAN ANY ONE OF THE DISPATCHER.
+SELECT *
+FROM EMP
+WHERE SAL > ANY(SELECT SAL
+FROM EMP
+WHERE JOB='DISPATCHER');
++------+----------+-----------+------------+--------+------------+------+------------+-----------+------+------+------+
+| EID  | FNAME    | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+----------+-----------+------------+--------+------------+------+------------+-----------+------+------+------+
+| 1601 | Siddarth | Patil     | 1985-11-24 | M      | Ceo        | NULL | 2016-01-16 | 500000.00 | NULL |  113 | NULL |
+| 1602 | Hema     | Shetty    | 1996-03-20 | F      | Hr         | 1601 | 2016-10-20 | 150000.00 | NULL |  114 |  507 |
+| 1701 | Rahul    | Mukharjee | 1991-02-19 | M      | Manager    | 1602 | 2017-04-17 | 100000.00 | NULL |  111 | NULL |
+| 1702 | Sameer   | Khan      | 1995-04-20 | M      | Manager    | 1602 | 2017-07-07 | 120000.00 | NULL |  110 | NULL |
+| 1902 | Abhijit  | Gowda     | 1997-12-25 | M      | Dispatcher | 1702 | 2019-12-28 |  50000.00 | NULL |  110 |  505 |
++------+----------+-----------+------------+--------+------------+------+------------+-----------+------+------+------+
+164.WAQTD THE DETAILS OF EMP WHO ARE NOT THE REPORTING MANAGER.
+SELECT *
+FROM EMP
+WHERE EID NOT IN(SELECT MGR
+FROM EMP
+WHERE MGR IS NOT NULL);
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| EID  | FNAME   | LNAME    | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL      | COMM    | DNO  | CID  |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+| 1801 | Jahnavi | Naik     | 1996-04-11 | F      | Dispatcher | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 1901 | Shivani | Rai      | 1998-11-07 | F      | Tester     | 1601 | 2019-12-12 | 45000.00 |    NULL |  113 |  502 |
+| 1902 | Abhijit | Gowda    | 1997-12-25 | M      | Dispatcher | 1702 | 2019-12-28 | 50000.00 |    NULL |  110 |  505 |
+| 1903 | Karan   | Bhat     | 1997-12-26 | M      | Salesman   | 1701 | 2019-12-26 | 45000.00 |    NULL |  111 | NULL |
+| 2001 | Murali  | Krishnan | 1998-06-08 | M      | Dispatcher | 1702 | 2020-03-15 | 45000.00 | 1000.00 |  110 | NULL |
+| 2002 | Dharani | Patil    | 1998-11-10 | F      | Developer  | 1601 | 2021-06-20 | 30000.00 | 3000.00 |  113 | NULL |
+| 2101 | Rashmi  | Gowda    | 1995-10-03 | F      | Salesman   | 1701 | 2021-01-02 | 45000.00 | 3000.00 |  111 | NULL |
+| 2102 | Fariya  | Taj      | 1999-01-03 | F      | Developer  | 1601 | 2021-03-01 | 32000.00 | 3600.00 |  113 | NULL |
+| 2103 | Priya   | Shetty   | 1998-03-20 | F      | Accountant | 1602 | 2021-05-01 | 32000.00 | 3600.00 |  112 | NULL |
+| 2104 | Aman    | Rai      | 1998-08-15 | M      | Salesman   | 1701 | 2021-12-26 | 40000.00 |    NULL |  111 | NULL |
+| 2201 | Kiran   | Raj      | 1999-09-21 | M      | Accountant | 1602 | 2022-08-28 | 30000.00 | 3600.00 |  112 |  503 |
++------+---------+----------+------------+--------+------------+------+------------+----------+---------+------+------+
+
+165.WAQTD THE PRODUCT DETAILS WHICH IS REMAINED UNSOLD
+SELECT *
+FROM PRODUCT
+WHERE PRODUCT_ID NOT IN(SELECT PRODUCT_ID
+FROM ORDERS);
++------------+---------------------+----------+
+| PRODUCT_ID | PNAME               | PRICE    |
++------------+---------------------+----------+
+|          8 | External Hard Drive |  9999.00 |
+|         10 | Keyboard            |  2499.00 |
+|         13 | VR Headset          | 29999.00 |
+|         15 | USB Flash Drive     |   999.00 |
++------------+---------------------+----------+
+166.WAQTD THE LOCATION DETAILS WHERE NO CUSTOMER ARE LIVING IN THAT LOCATION.
+
+SELECT *
+FROM LOCATION
+WHERE  LID NOT IN(SELECT LID
+FROM CUSTOMER);
+Empty set (0.02 sec)
+
+167.WAQTD DETAILS OF EMPLOYEE WHO IS GETTING  SAL MORE THAN AVG SAL OF DNO 111
+SELECT *
+FROM EMP
+WHERE SAL >(SELECT AVG(SAL)
+FROM EMP
+WHERE DNO=111);
++------+----------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+| EID  | FNAME    | LNAME     | DOB        | GENDER | JOB     | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+----------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+| 1601 | Siddarth | Patil     | 1985-11-24 | M      | Ceo     | NULL | 2016-01-16 | 500000.00 | NULL |  113 | NULL |
+| 1602 | Hema     | Shetty    | 1996-03-20 | F      | Hr      | 1601 | 2016-10-20 | 150000.00 | NULL |  114 |  507 |
+| 1701 | Rahul    | Mukharjee | 1991-02-19 | M      | Manager | 1602 | 2017-04-17 | 100000.00 | NULL |  111 | NULL |
+| 1702 | Sameer   | Khan      | 1995-04-20 | M      | Manager | 1602 | 2017-07-07 | 120000.00 | NULL |  110 | NULL |
++------+----------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+
+CORRELATED SUBQUERY
+=================================================================================
+
+> IN CORRELATED,THE INNER QUERY AND OTHER QUERY ARE RELATED TO EACH OTHER.
+> HERE,NOT ONLY OUTER QUERY DEPENDS UPON INNER QUERY BUT ALSO INNER QUERY DEPENDS UPON OUTER QUERY.
+
+=================================================================================
+
+168.WAQTD THE DETAILS OF EMP WHO IS GETTING SAL MORE THAN AVG SALARY OF HIS DEPT.
+
+SELECT *
+FROM EMP E
+WHERE SAL>(SELECT AVG(SAL)
+FROM EMP
+WHERE DNO=E.DNO);
++------+----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| EID  | FNAME    | LNAME     | DOB        | GENDER | JOB        | MGR  | DOJ        | SAL       | COMM    | DNO  | CID  |
++------+----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+| 1601 | Siddarth | Patil     | 1985-11-24 | M      | Ceo        | NULL | 2016-01-16 | 500000.00 |    NULL |  113 | NULL |
+| 1701 | Rahul    | Mukharjee | 1991-02-19 | M      | Manager    | 1602 | 2017-04-17 | 100000.00 |    NULL |  111 | NULL |
+| 1702 | Sameer   | Khan      | 1995-04-20 | M      | Manager    | 1602 | 2017-07-07 | 120000.00 |    NULL |  110 | NULL |
+| 2103 | Priya    | Shetty    | 1998-03-20 | F      | Accountant | 1602 | 2021-05-01 |  32000.00 | 3600.00 |  112 | NULL |
++------+----------+-----------+------------+--------+------------+------+------------+-----------+---------+------+------+
+
+169.WAQTD THE DETAILS OF EMP WHO ARE ELDER THAN THIER MANAGER
+SELECT *
+FROM EMP E1
+WHERE DOB  <  (SELECT DOB
+FROM EMP 
+WHERE EID=E1.MGR);
++------+--------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+| EID  | FNAME  | LNAME     | DOB        | GENDER | JOB     | MGR  | DOJ        | SAL       | COMM | DNO  | CID  |
++------+--------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+| 1701 | Rahul  | Mukharjee | 1991-02-19 | M      | Manager | 1602 | 2017-04-17 | 100000.00 | NULL |  111 | NULL |
+| 1702 | Sameer | Khan      | 1995-04-20 | M      | Manager | 1602 | 2017-07-07 | 120000.00 | NULL |  110 | NULL |
++------+--------+-----------+------------+--------+---------+------+------------+-----------+------+------+------+
+
+170.WAQTD THE DETAILS OF EMP IF THE EMP AND MANAGER HAVE SAME GENDER
+
+SELECT *
+FROM EMP E1
+WHERE GENDER  IN(SELECT GENDER
+FROM EMP
+WHERE EID=E1.MGR);
+
+===================================================================================
+DRAWBACKS OF SUBQUERY
+================================
+> IT IS DIFFCULT TO CONNECT MULTIPLE TABLES.
+> WE CANNOT ABLE TO GET THE DATA FROM TWO DIFFERENT TABLES AT ONCE.
+
+************************************************************************
+
+JOINS
+*********
+JOINS ARE USED TO RETRIEVE THE DATA FROM MULTIPLE TABLES SIMULTANEUSLY.
+
+TYPES OF JOINS
+******************
+> CARTESIAN JOIN/CROSS JOIN(DEPRECATED)
+> INNER JOIN
+> SELF JOIN
+> OUTER JOIN
+    -> LEFT OUTER JOIN
+    -> RIGHT OTER JOIN
+    -> FULL OUTER JOIN
+>NATURAL JOIN
+
+**************************************************************************
+
+CARTESIAN JOINS/CROSS JOINS
+============================
+IN CROSS  JOIN,THE RECORDS OF TABLE 1 WILL BE MERGED WITH RECORDS OF TABLES2.
+
+
+WHENEVER WE PEROFORM CROSS JOINS,
+-----------------------------------------
+NO OF COLUMNS GENERATED: T1+T2
+NO ROWS GENERATED :T1*T2
+
+
+SYNTAX:
+*********
+SELECT COLUMN_NAME
+FROM TABLE_NAME1 CROSS JOIN TABLE_NAME 2;
+
+
+DRAWBACK
+********************
+> WE GET MORE NUMBER OF ERROR WHEN COMPARED TO VAILD RECORDS.
+
+
+
+
+NOTE:
+======
+INNER JOIN ARE USED TO OBTAIN ONLY THE MATCHED RECORDS
+
+SYSNTAX:
+=-------
+SELECT COLUMN_NAME 
+FROM table_name_1 INNER JOIN table_name2
+ON table_name1.coloumn_name=table_name2.column_name;
+
+
+
+===========================================================================================
+171.WAQTD THE EMP FNAME AND DPTNAME?
+
+SELECT FNAME, DNAME  FROM EMP
+INNER JOIN DEPT ON EMP.DNO=DEPT.DNO;
+
++----------+-----------+
+| FNAME    | DNAME     |
++----------+-----------+
+| Siddarth | IT        |
+| Hema     | HR        |
+| Rahul    | Marketing |
+| Sameer   | Sales     |
+| Jahnavi  | Sales     |
+| Shivani  | IT        |
+| Abhijit  | Sales     |
+| Karan    | Marketing |
+| Murali   | Sales     |
+| Dharani  | IT        |
+| Rashmi   | Marketing |
+| Fariya   | IT        |
+| Priya    | Finance   |
+| Aman     | Marketing |
+| Kiran    | Finance   |
++----------+-----------+
+
+
+172.WAQTD THE CUSTOMER FILL NAME AND HIS LOCATION?
+SELECT CONCAT(FIRST_NAME,' ',LAST_NAME) "FULL NAME",LOCATION 
+ FROM CUSTOMER C1 INNER JOIN LOCATION L1 
+ON C1.LID=L1.LID;
++---------------+------------------+
+| FULL NAME     | LOCATION         |
++---------------+------------------+
+| Ravi Kumar    | T. Nagar         |
+| Shivani Rai   | Fort Kochi       |
+| Kiran Raj     | Koramangala      |
+| Arjun Singh   | Benz Circle      |
+| Abhijit Gowda | Jayalakshmipuram |
+| Kiran Das     | Peelamedu        |
+| Hema Shetty   | Kondalampatti    |
+| Nisha Pillai  | Hitech City      |
+| Vinay Iyer    | Kowdiar          |
+| Meera Suresh  | Hanamkonda       |
+| Raghav Rani   | Chandragiri      |
+| Lakshmi Patil | Peelamedu        |
+| Anand Bhat    | MVP Colony       |
+| Kavya Nair    | Gadag Road       |
+| Pranav Shetty | Hitech City      |
+| Sita Pillai   | Fort Kochi       |
+| Mohan Nambiar | Koramangala      |
+| Neha Varma    | Vellayambalam    |
+| Karthik Menon | Kondalampatti    |
+| Riya Iyer     | Alwarpet         |
++---------------+------------------+
+
+
+173.WAQTD THE EMP FNAME,EMP LAST NAME , DEPT NAME IF THE EMP IS WORKING IN IT DEPT?
+
+SELECT FNAME,LNAME,DNAME FROM EMP E1 INNER JOIN DEPT D1 ON E1.DNO=D1.DNO 
+WHERE DNAME='IT';
+';
++----------+-------+-------+
+| FNAME    | LNAME | DNAME |
++----------+-------+-------+
+| Siddarth | Patil | IT    |
+| Shivani  | Rai   | IT    |
+| Dharani  | Patil | IT    |
+| Fariya   | Taj   | IT    |
++----------+-------+-------+
+
+
+
+174.WAQTD THE EMP FNAME,LNAME,DNO ,DNAME , IF THE EMP IS WORKING AS SALESSMAN?
+SELECT  E1.FNAME,E1.LNAME,D1. DNAME,E1.DNO FROM EMP E1 INNER JOIN DEPT D1 
+ON E1.DNO=D1.DNO WHERE JOB='SALESMAN';
+
++--------+-------+-----------+------+
+| FNAME  | LNAME | DNAME     | DNO  |
++--------+-------+-----------+------+
+| Karan  | Bhat  | Marketing |  111 |
+| Rashmi | Gowda | Marketing |  111 |
+| Aman   | Rai   | Marketing |  111 |
++--------+-------+-----------+------+
+
+
+
+175.WAQTD THE CUSTOMER NAME ORDER_ID IF THR CUSTOMER ORDERD ANY PRODUCT?
+
+SELECT CONCAT(FIRST_NAME,' ',LAST_NAME)"CUSTOMER NAME",ORDER_ID  FROM CUSTOMER
+C1 INNER JOIN ORDERS O1 ON C1.CID=O1.CID ;
+
+
++---------------+----------+
+| CUSTOMER NAME | ORDER_ID |
++---------------+----------+
+| Shivani Rai   |     1111 |
+| Abhijit Gowda |     1112 |
+| Meera Suresh  |     1113 |
+| Kiran Raj     |     1114 |
+| Raghav Rani   |     1115 |
+| Vinay Iyer    |     1116 |
+| Hema Shetty   |     1117 |
+| Lakshmi Patil |     1118 |
+| Kavya Nair    |     1119 |
+| Ravi Kumar    |     1120 |
+| Raghav Rani   |     1121 |
+| Kiran Raj     |     1122 |
+| Nisha Pillai  |     1123 |
+| Pranav Shetty |     1124 |
+| Abhijit Gowda |     1125 |
+| Shivani Rai   |     1126 |
+| Kiran Raj     |     1127 |
+| Raghav Rani   |     1128 |
+| Meera Suresh  |     1129 |
+| Lakshmi Patil |     1130 |
+| Abhijit Gowda |     1131 |
+| Nisha Pillai  |     1132 |
+| Kiran Das     |     1133 |
+| Vinay Iyer    |     1134 |
+| Pranav Shetty |     1135 |
++---------------+----------+
+
+
+
+176.WAQTD THE PRODUCT NAME ,PRODUCT PRICE , AND ORDER _ID OF THE PRODUVT WHICH HAS BEEN ORDERSD?
+
+SELECT PNAME,PRICE, ORDER_ID FROM PRODUCT P1 INNER JOIN ORDERS O1
+ON P1.PRODUCT_ID =O1.PRODUCT_ID ;
+
++-------------------+----------+----------+
+| PNAME             | PRICE    | ORDER_ID |
++-------------------+----------+----------+
+| Headphones        |  4499.00 |     1111 |
+| Smartphone        | 22999.00 |     1112 |
+| Mouse             |  1499.00 |     1113 |
+| Laptop            | 59999.00 |     1114 |
+| Printer           | 10999.00 |     1115 |
+| Smartphone        | 22999.00 |     1116 |
+| Headphones        |  4499.00 |     1117 |
+| Smartwatch        | 14999.00 |     1118 |
+| Laptop            | 59999.00 |     1119 |
+| Game Console      | 22999.00 |     1120 |
+| Monitor           | 19999.00 |     1121 |
+| Mouse             |  1499.00 |     1122 |
+| Bluetooth Speaker |  6499.00 |     1123 |
+| Headphones        |  4499.00 |     1124 |
+| Tablet            | 29999.00 |     1125 |
+| Camera            | 37999.00 |     1126 |
+| Smartwatch        | 14999.00 |     1127 |
+| Headphones        |  4499.00 |     1128 |
+| Bluetooth Speaker |  6499.00 |     1129 |
+| Game Console      | 22999.00 |     1130 |
+| Laptop            | 59999.00 |     1131 |
+| Monitor           | 19999.00 |     1132 |
+| Smartwatch        | 14999.00 |     1133 |
+| Camera            | 37999.00 |     1134 |
+| Bluetooth Speaker |  6499.00 |     1135 |
++-------------------+----------+----------+
+
+------------------------------------------------------------------
+
+177.WAQTD THE EMP FTRST_NAME  ,DEPT NAME , AND BELOW FORMAT  ?
+
+EMP_DATA
+-------------
+SIDDARTH.P,IT
+
+
+SELECT CONCAT(E1.FNAME,'.',SUBSTRING(E1.LNAME,1,1),',',D1.DNAME)"EMP_DATA" FROM EMP 
+E1 INNER JOIN DEPT D1 ON E1.DNO=D1.DNO;
+
++--------------------+
+| EMP_DATA           |
++--------------------+
+| Siddarth.P,IT      |
+| Hema.S,HR          |
+| Rahul.M,Marketing  |
+| Sameer.K,Sales     |
+| Jahnavi.N,Sales    |
+| Shivani.R,IT       |
+| Abhijit.G,Sales    |
+| Karan.B,Marketing  |
+| Murali.K,Sales     |
+| Dharani.P,IT       |
+| Rashmi.G,Marketing |
+| Fariya.T,IT        |
+| Priya.S,Finance    |
+| Aman.R,Marketing   |
+| Kiran.R,Finance    |
++--------------------+
+
+
+178.WAQTD THE DEPT NAME AND LOCATION ,CITY AS ADDRESS ?
+
+DNAME              ADDRESS
+------          -----------
+IT              LOCATION,CITY
+
+
+SELECT D1.DNAME,CONCAT(LOCATION,',',CITY) "ADDRESS" FROM LOCATION L1
+INNER JOIN DEPT D1 ON D1.LID=L1.LID;
+
+
++-----------+-----------------------+
+| DNAME     | ADDRESS               |
++-----------+-----------------------+
+| IT        | Koramangala,Bangalore |
+| HR        | Hitech City,Hyderabad |
+| Finance   | Hitech City,Hyderabad |
+| Marketing | T. Nagar,Chennai      |
+| Sales     | T. Nagar,Chennai      |
++-----------+-----------------------+
+
+179.WAQTD THE EMP FULLNAME,DPET NAME, LOCATION,CITY  AS ADDRESS OF THE DEPT ?
+SELECT CONCAT(E1.FNAME,' ',E1.LNAME) FULLNAME,D1.DNAME,
+CONCAT(L1.LOCATION,',',L1.CITY)"ADDRESS" FROM EMP E1 INNER JOIN DEPT D1 ON
+D1.DNO=E1.DNO INNER JOIN LOCATION L1 ON L1.LID=D1.LID;
+
++-----------------+-----------+-----------------------+
+| FULLNAME        | DNAME     | ADDRESS               |
++-----------------+-----------+-----------------------+
+| Fariya Taj      | IT        | Koramangala,Bangalore |
+| Dharani Patil   | IT        | Koramangala,Bangalore |
+| Shivani Rai     | IT        | Koramangala,Bangalore |
+| Siddarth Patil  | IT        | Koramangala,Bangalore |
+| Kiran Raj       | Finance   | Hitech City,Hyderabad |
+| Priya Shetty    | Finance   | Hitech City,Hyderabad |
+| Hema Shetty     | HR        | Hitech City,Hyderabad |
+| Aman Rai        | Marketing | T. Nagar,Chennai      |
+| Rashmi Gowda    | Marketing | T. Nagar,Chennai      |
+| Murali Krishnan | Sales     | T. Nagar,Chennai      |
+| Karan Bhat      | Marketing | T. Nagar,Chennai      |
+| Abhijit Gowda   | Sales     | T. Nagar,Chennai      |
+| Jahnavi Naik    | Sales     | T. Nagar,Chennai      |
+| Sameer Khan     | Sales     | T. Nagar,Chennai      |
+| Rahul Mukharjee | Marketing | T. Nagar,Chennai      |
++-----------------+-----------+-----------------------+
+
+180.WAQTD THE CUSTOMER FULL NAME AND THE PRODUCT NAME WHIH HE ORDERD ?
+
+
+SELECT CONCAT(C1.FIRST_NAME,' ',C1.LAST_NAME)"FULL NAME",P1.PNAME,O1.ORDER_ID FROM
+CUSTOMER C1 INNER JOIN ORDERS O1 ON C1.CID=O1.CID INNER JOIN PRODUCT P1 ON P1.PRODUCT_ID=O1.PRODUCT_ID;
+
+
++---------------+-------------------+----------+
+| FULL NAME     | PNAME             | ORDER_ID |
++---------------+-------------------+----------+
+| Ravi Kumar    | Game Console      |     1120 |
+| Shivani Rai   | Camera            |     1126 |
+| Shivani Rai   | Headphones        |     1111 |
+| Kiran Raj     | Smartwatch        |     1127 |
+| Kiran Raj     | Mouse             |     1122 |
+| Kiran Raj     | Laptop            |     1114 |
+| Abhijit Gowda | Laptop            |     1131 |
+| Abhijit Gowda | Tablet            |     1125 |
+| Abhijit Gowda | Smartphone        |     1112 |
+| Kiran Das     | Smartwatch        |     1133 |
+| Hema Shetty   | Headphones        |     1117 |
+| Nisha Pillai  | Monitor           |     1132 |
+| Nisha Pillai  | Bluetooth Speaker |     1123 |
+| Vinay Iyer    | Camera            |     1134 |
+| Vinay Iyer    | Smartphone        |     1116 |
+| Meera Suresh  | Bluetooth Speaker |     1129 |
+| Meera Suresh  | Mouse             |     1113 |
+| Raghav Rani   | Headphones        |     1128 |
+| Raghav Rani   | Monitor           |     1121 |
+| Raghav Rani   | Printer           |     1115 |
+| Lakshmi Patil | Game Console      |     1130 |
+| Lakshmi Patil | Smartwatch        |     1118 |
+| Kavya Nair    | Laptop            |     1119 |
+| Pranav Shetty | Bluetooth Speaker |     1135 |
+| Pranav Shetty | Headphones        |     1124 |
++---------------+-------------------+----------+
+
+
+181.WAQTD THE CUSTOMER FULL NAME, LOCATION IF THE CUSTOMER HAS ORDERD ANY PRODUCT ?
+
+
+SELECT CONCAT(C1.FIRST_NAME,' ',C1.LAST_NAME)"FULL NAME",L1.LOCATION 
+FROM CUSTOMER C1 INNER JOIN ORDERS O1
+ON C1.CID=O1.CID INNER JOIN LOCATION L1
+ON C1.LID=L1.LID;
++---------------+------------------+
+| FULL NAME     | LOCATION         |
++---------------+------------------+
+| Shivani Rai   | Fort Kochi       |
+| Abhijit Gowda | Jayalakshmipuram |
+| Meera Suresh  | Hanamkonda       |
+| Kiran Raj     | Koramangala      |
+| Raghav Rani   | Chandragiri      |
+| Vinay Iyer    | Kowdiar          |
+| Hema Shetty   | Kondalampatti    |
+| Lakshmi Patil | Peelamedu        |
+| Kavya Nair    | Gadag Road       |
+| Ravi Kumar    | T. Nagar         |
+| Raghav Rani   | Chandragiri      |
+| Kiran Raj     | Koramangala      |
+| Nisha Pillai  | Hitech City      |
+| Pranav Shetty | Hitech City      |
+| Abhijit Gowda | Jayalakshmipuram |
+| Shivani Rai   | Fort Kochi       |
+| Kiran Raj     | Koramangala      |
+| Raghav Rani   | Chandragiri      |
+| Meera Suresh  | Hanamkonda       |
+| Lakshmi Patil | Peelamedu        |
+| Abhijit Gowda | Jayalakshmipuram |
+| Nisha Pillai  | Hitech City      |
+| Kiran Das     | Peelamedu        |
+| Vinay Iyer    | Kowdiar          |
+| Pranav Shetty | Hitech City      |
++---------------+------------------+
+
+
+182.WAQTD THE CUSTOMER FULL NAME, LOCATION ,CITY ,STATE, ADRESS ,ORDER_ID AMD PRODUCT NAME OF THE CUSTOMER ?
+
+SELECT CONCAT(C1.FIRST_NAME,',',C1.LAST_NAME) FULLNAME,
+CONCAT(L1.LOCATION,',',L1.CITY,',',L1.STATE) ADDRESS,
+O1.ORDER_ID,P1.PNAME
+FROM CUSTOMER C1 INNER JOIN LOCATION L1
+ON C1.LID=L1.LID INNER JOIN ORDERS O1
+ON C1.CID=O1.CID INNER JOIN PRODUCT P1
+ON O1.PRODUCT_ID=P1.PRODUCT_ID;
+
+
++---------------+-------------------------------------+----------+-------------------+
+| FULLNAME      | ADDRESS                             | ORDER_ID | PNAME             |
++---------------+-------------------------------------+----------+-------------------+
+| Vinay,Iyer    | Kowdiar,Thiruvananthapuram,Kerala   |     1116 | Smartphone        |
+| Abhijit,Gowda | Jayalakshmipuram,Mysore,Karnataka   |     1112 | Smartphone        |
+| Abhijit,Gowda | Jayalakshmipuram,Mysore,Karnataka   |     1131 | Laptop            |
+| Kavya,Nair    | Gadag Road,Hubli,Karnataka          |     1119 | Laptop
+         |
+| Kiran,Raj     | Koramangala,Bangalore,Karnataka     |     1114 | Laptop            |
+| Raghav,Rani   | Chandragiri,Tirupati,Andhra Pradesh |     1128 | Headphones        |
+| Pranav,Shetty | Hitech City,Hyderabad,Telangana     |     1124 | Headphones        |
+| Hema,Shetty   | Kondalampatti,Salem,Tamil Nadu      |     1117 | Headphones        |
+| Shivani,Rai   | Fort Kochi,Kochi,Kerala             |     1111 | Headphones        |
+| Kiran,Das     | Peelamedu,Coimbatore,Tamil Nadu     |     1133 | Smartwatch        |
+| Kiran,Raj     | Koramangala,Bangalore,Karnataka     |     1127 | Smartwatch        |
+| Lakshmi,Patil | Peelamedu,Coimbatore,Tamil Nadu     |     1118 | Smartwatch        |
+| Abhijit,Gowda | Jayalakshmipuram,Mysore,Karnataka   |     1125 | Tablet            |
+| Pranav,Shetty | Hitech City,Hyderabad,Telangana     |     1135 | Bluetooth Speaker |
+| Meera,Suresh  | Hanamkonda,Warangal,Telangana       |     1129 | Bluetooth Speaker |
+| Nisha,Pillai  | Hitech City,Hyderabad,Telangana     |     1123 | Bluetooth Speaker |
+| Vinay,Iyer    | Kowdiar,Thiruvananthapuram,Kerala   |     1134 | Camera            |
+| Shivani,Rai   | Fort Kochi,Kochi,Kerala             |     1126 | Camera            |
+| Nisha,Pillai  | Hitech City,Hyderabad,Telangana     |     1132 | Monitor           |
+| Raghav,Rani   | Chandragiri,Tirupati,Andhra Pradesh |     1121 | Monitor           |
+| Kiran,Raj     | Koramangala,Bangalore,Karnataka     |     1122 | Mouse             |
+| Meera,Suresh  | Hanamkonda,Warangal,Telangana       |     1113 | Mouse             |
+| Raghav,Rani   | Chandragiri,Tirupati,Andhra Pradesh |     1115 | Printer           |
+| Lakshmi,Patil | Peelamedu,Coimbatore,Tamil Nadu     |     1130 | Game Console      |
+| Ravi,Kumar    | T. Nagar,Chennai,Tamil Nadu         |     1120 | Game Console      |
++---------------+-------------------------------------+----------+-------------------+
+
+183.WAQTD THE ORDER ID ,CUSTOMER FNAME WITH INITIAL,PRODUCT NAME ,PRICE AS BILL,ORDER_DATE,DELIVERY_DATE,LOCATION,CITY,STATE AS DELIVERY_ADDRESS,EMP FNAME AS DELIVER BOY.
+
+
+SELECT CONCAT(C1.FIRST_NAME,'.',SUBSTR(C1.LAST_NAME,1,1)) FULLNAME,
+O1.ORDER_ID,
+P1.PNAME,
+P1.PRICE  BILL,
+O1.ORDER_DATE,
+O1.DELIVERY_DATE,
+CONCAT(L1.LOCATION,',',L1.CITY,',',L1.STATE) DELIVERY_ADDRESS,
+E1.FNAME AS DELIVERY_BOY
+FROM CUSTOMER C1 INNER JOIN LOCATION L1
+ON C1.LID=L1.LID INNER JOIN ORDERS O1
+ON C1.CID=O1.CID INNER JOIN PRODUCT P1
+ON O1.PRODUCT_ID=P1.PRODUCT_ID INNER JOIN EMP E1
+ON O1.EID=E1.EID;
+
+
+***********************************************************************************
+SELF JOINS:
+ 
+> IS USED OBTAIN ONLY THE MATCHED RECORDES
+> IN SELF JOIN ,TABLE LEVEL ALIASING IS MANDATORY.
+> IT WORKS SAME AS INNER JOIN.
+
+
+SYNTAX:
+-------
+SELECT COLUMN_NAME
+FROM TABLE_NAME T1 JOIN TABLE_NAME T2
+ON T1.COLUMN_NAME=T2.COLUMN_NAME;
+****************************************************************************
+
+184.WAQTD THE EMP FNAME ALONG WITH HIS MANAGER FNAME
+
+SELECT E.FNAME,M.FNAME
+FROM EMP E JOIN EMP M
+ON E.EID=M.MGR;
++----------+---------+
+| FNAME    | FNAME   |
++----------+---------+
+| Siddarth | Hema    |
+| Hema     | Rahul   |
+| Hema     | Sameer  |
+| Sameer   | Jahnavi |
+| Siddarth | Shivani |
+| Sameer   | Abhijit |
+| Rahul    | Karan   |
+| Sameer   | Murali  |
+| Siddarth | Dharani |
+| Rahul    | Rashmi  |
+| Siddarth | Fariya  |
+| Hema     | Priya   |
+| Rahul    | Aman    |
+| Hema     | Kiran   |
++----------+---------+
+
+185.WAQTD THE EMP FNAME ALONG WITH MANAGER FNAME IF THE EMP AND MANAGERS ARE WORKING IN SAME DEPT
+
+SELECT E.FNAME ,M.FNAME
+FROM EMP E JOIN EMP M
+ON E.EID=M.MGR 
+WHERE E.DNO=M.DNO;
++----------+---------+
+| FNAME    | FNAME   |
++----------+---------+
+| Sameer   | Jahnavi |
+| Siddarth | Shivani |
+| Sameer   | Abhijit |
+| Rahul    | Karan   |
+| Sameer   | Murali  |
+| Siddarth | Dharani |
+| Rahul    | Rashmi  |
+| Siddarth | Fariya  |
+| Rahul    | Aman    |
++----------+---------+
+
+186.WAQTD THE EMP FNAME,DOB ALONG WITH MANAGER FNAME,DOB IF THE EMP IS ELDER THAN MANAGER
+
+SELECT E.FNAME,E.DOB,M.FNAME,M.DOB
+FROM EMP E JOIN EMP M
+ON E.EID=M.MGR
+WHERE E.DOB >M.DOB;
++-------+------------+--------+------------+
+| FNAME | DOB        | FNAME  | DOB        |
++-------+------------+--------+------------+
+| Hema  | 1996-03-20 | Rahul  | 1991-02-19 |
+| Hema  | 1996-03-20 | Sameer | 1995-04-20 |
++-------+------------+--------+------------+
+
+187.WAQTD THE EMP  FNAME HIS DEPT NAME ALONG WITH MANAGER NAME.
+
+SELECT E.FNAME,D.DNAME,M.FNAME
+FROM EMP E JOIN EMP M
+ON E.EID=M.MGR JOIN DEPT D
+ON D.DNO=E.DNO;
++----------+-----------+---------+
+| FNAME    | DNAME     | FNAME   |
++----------+-----------+---------+
+| Siddarth | IT        | Hema    |
+| Hema     | HR        | Rahul   |
+| Hema     | HR        | Sameer  |
+| Sameer   | Sales     | Jahnavi |
+| Siddarth | IT        | Shivani |
+| Sameer   | Sales     | Abhijit |
+| Rahul    | Marketing | Karan   |
+| Sameer   | Sales     | Murali  |
+| Siddarth | IT        | Dharani |
+| Rahul    | Marketing | Rashmi  |
+| Siddarth | IT        | Fariya  |
+| Hema     | HR        | Priya   |
+| Rahul    | Marketing | Aman    |
+| Hema     | HR        | Kiran   |
++----------+-----------+---------+
+
+188.WAQTD THE EMP FNAME,HIS DEPT NAME ALONG WITH DEPT LOC AND ALSO MANAGER NAME,MANAGER DEPT NAME AND MANAGER'S DEPT LOCATION IF THE EMP AND MANAGERS ARE WORKING IN DIFFERENT DEPTS.
+
+SELECT E1.FNAME,D1.DNAME,L1.LOCATION,E2.FNAME,D2.DNAME,L1.LOCATION
+FROM EMP E1 JOIN EMP E2
+ON E1.MGR=E2.EID INNER JOIN DEPT D1
+ON E1.DNO=D1.DNO INNER JOIN LOCATION L1
+ON D1.LID=L1.LID INNER JOIN DEPT D2
+ON E2.DNO=D2.DNO INNER JOIN LOCATION L2
+ON D2.LID=L2.LID 
+WHERE D1.DNAME!=D2.DNAME;+--------+-----------+-------------+----------+-------+-------------+
+| FNAME  | DNAME     | LOCATION    | FNAME    | DNAME | LOCATION    |
++--------+-----------+-------------+----------+-------+-------------+
+| Hema   | HR        | Hitech City | Siddarth | IT    | Hitech City |
+| Sameer | Sales     | T. Nagar    | Hema     | HR    | T. Nagar    |
+| Rahul  | Marketing | T. Nagar    | Hema     | HR    | T. Nagar    |
+| Kiran  | Finance   | Hitech City | Hema     | HR    | Hitech City |
+| Priya  | Finance   | Hitech City | Hema     | HR    | Hitech City |
++--------+-----------+-------------+----------+-------+-------------+
+
+
+189.WAQTD THE CUSTOMER FULLNAME, PRODUCT NAME TOTAL BILL  IF THE CUSTOMER HA PURCHASED PRODUCT AFTER JUNE (ORDER_DATE).
+
+
+SELECT CONCAT(C1.FIRST_NAME,',',C1.LAST_NAME) FULL_NAME ,P1.PNAME,P1.PRICE AS TOTAL_BILL
+FROM CUSTOMER C1 JOIN ORDERS O1
+ON C1.CID=O1.CID INNER JOIN PRODUCT P1
+ON O1.PRODUCT_ID=P1.PRODUCT_ID
+WHERE DATE_FORMAT(ORDER_DATE,'%m')>6;
+   
++---------------+-------------------+------------+
+| FULL_NAME     | PNAME             | TOTAL_BILL |
++---------------+-------------------+------------+
+| Kiran,Raj     | Smartwatch        |   14999.00 |
+| Abhijit,Gowda | Laptop            |   59999.00 |
+| Kiran,Das     | Smartwatch        |   14999.00 |
+| Nisha,Pillai  | Monitor           |   19999.00 |
+| Vinay,Iyer    | Camera            |   37999.00 |
+| Meera,Suresh  | Bluetooth Speaker |    6499.00 |
+| Raghav,Rani   | Headphones        |    4499.00 |
+| Lakshmi,Patil | Game Console      |   22999.00 |
+| Pranav,Shetty | Bluetooth Speaker |    6499.00 |
++---------------+-------------------+------------+
+
+190.WAQTD THE EMP FNAME ,LNAME,MANAGER FNAME,LNAME IF THE EMP IS REORTING TO SIDDARTH.
+
+SELECT E1.FNAME,E1.LNAME,E2.FNAME,E2.LNAME
+FROM EMP E1 JOIN EMP E2
+ON E1.MGR=E2.EID 
+WHERE E2.FNAME='SIDDARTH';
++---------+--------+----------+-------+
+| FNAME   | LNAME  | FNAME    | LNAME |
++---------+--------+----------+-------+
+| Hema    | Shetty | Siddarth | Patil |
+| Shivani | Rai    | Siddarth | Patil |
+| Dharani | Patil  | Siddarth | Patil |
+| Fariya  | Taj    | Siddarth | Patil |
++---------+--------+----------+-------+
+
+191.WAQTD THE EMP FNAME,LNAME IF EMP IS REPORTING TO KIRANS MGR
+SELECT E1.FNAME,E1.LNAME
+FROM EMP E1
+WHERE E1.MGR IN(SELECT  E2.MGR
+FROM EMP E2
+WHERE E2.FNAME='KIRAN');
+
++--------+-----------+
+| FNAME  | LNAME     |
++--------+-----------+
+| Rahul  | Mukharjee |
+| Sameer | Khan      |
+| Priya  | Shetty    |
+| Kiran  | Raj       |
++--------+-----------+
+
+192.WAQTD THE EMP FNAME ,SAL IF THE EMP IS GETTING SALARY MORE THAN DHARANI.
+ 
+SELECT E1.FNAME,SAL
+FROM EMP E1
+WHERE SAL > (SELECT SAL 
+FROM EMP E2
+WHERE E2.FNAME='DHARANI');
+
+OR 
+
+
+SELECT E1.FNAME,E1.SAL
+FROM EMP E1 JOIN EMP E2
+ON E1.SAL>E2.SAL
+WHERE E2.FNAME='DHARANI';
++----------+-----------+
+| FNAME    | SAL       |
++----------+-----------+
+| Siddarth | 500000.00 |
+| Hema     | 150000.00 |
+| Rahul    | 100000.00 |
+| Sameer   | 120000.00 |
+| Jahnavi  |  45000.00 |
+| Shivani  |  45000.00 |
+| Abhijit  |  50000.00 |
+| Karan    |  45000.00 |
+| Murali   |  45000.00 |
+| Rashmi   |  45000.00 |
+| Fariya   |  32000.00 |
+| Priya    |  32000.00 |
+| Aman     |  40000.00 |
++----------+-----------+
+
+193.WAQTD THE TOTAL NUMBER OF ORDERS DONE BY EVERY CUSTOMER
+SELECT C1.FIRST_NAME,COUNT(ORDER_ID)
+FROM CUSTOMER C1 INNER JOIN ORDERS O1
+ON C1.CID=O1.CID
+GROUP BY C1.CID,C1.FIRST_NAME;
++------------+-----------------+
+| FIRST_NAME | COUNT(ORDER_ID) |
++------------+-----------------+
+| Shivani    |               2 |
+| Abhijit    |               3 |
+| Meera      |               2 |
+| Kiran      |               3 |
+| Raghav     |               3 |
+| Vinay      |               2 |
+| Hema       |               1 |
+| Lakshmi    |               2 |
+| Kavya      |               1 |
+| Ravi       |               1 |
+| Nisha      |               2 |
+| Pranav     |               2 |
+| Kiran      |               1 |
++------------+-----------------+
+
+194.WAQTD THE TOTAL AMOUNT SPENT BY EVERY CUSTOMER.
+
+SELECT C1.FIRST_NAME,SUM(P1.PRICE)  SPENT
+FROM CUSTOMER C1 INNER JOIN ORDERS O1
+ON C1.CID=O1.CID INNER JOIN PRODUCT P1
+ON P1.PRODUCT_ID=O1.PRODUCT_ID
+GROUP BY C1.FIRST_NAME,C1.CID;
+
++------------+-----------+
+| FIRST_NAME | SPENT     |
++------------+-----------+
+| Ravi       |  22999.00 |
+| Shivani    |  42498.00 |
+| Kiran      |  76497.00 |
+| Abhijit    | 112997.00 |
+| Kiran      |  14999.00 |
+| Hema       |   4499.00 |
+| Nisha      |  26498.00 |
+| Vinay      |  60998.00 |
+| Meera      |   7998.00 |
+| Raghav     |  35497.00 |
+| Lakshmi    |  37998.00 |
+| Kavya      |  59999.00 |
+| Pranav     |  10998.00 |
++------------+-----------+
+
+
+195.WAQTD THE  TOP 3 MOST SELLING PRODUCT THE BASIS OF TOTAL NUMBER OF PRODUCTS AND IF WE HAVE  MORE THAN ONE PRODUCT WITH SAME UNITS SOLD ,ORDER ACCORDING TO REVENUE.
+
+SELECT P1.PNAME ,COUNT(*) NO_OF_UNITS_SOLD,SUM(P1.PRICE) TOTAL_REVENUE
+FROM PRODUCT P1 INNER JOIN ORDERS O1
+ON P1.PRODUCT_ID=O1.PRODUCT_ID
+GROUP BY P1.PNAME,P1.PRODUCT_ID
+ORDER BY NO_OF_UNITS_SOLD DESC,TOTAL_REVENUE DESC
+LIMIT 3;
++------------+------------------+---------------+
+| PNAME      | NO_OF_UNITS_SOLD | TOTAL_REVENUE |
++------------+------------------+---------------+
+| Headphones |                4 |      17996.00 |
+| Laptop     |                3 |     179997.00 |
+| Smartwatch |                3 |      44997.00 |
++------------+------------------+---------------+
+
+196.WAQTD THE TOP 3  CUSTOMERS WHO SPENT OVERALL.
+
+SELECT C.FIRST_NAME,C.LAST_NAME ,SUM(P.PRICE)  SPENT_OVERALL
+FROM CUSTOMER C INNER JOIN ORDERS O
+ON C.CID=O.CID INNER JOIN PRODUCT P
+ON P.PRODUCT_ID=O.PRODUCT_ID
+GROUP BY C.CID,C.FIRST_NAME,C.LAST_NAME
+ORDER  BY SPENT_OVERALL DESC
+LIMIT 3;
++------------+-----------+---------------+
+| FIRST_NAME | LAST_NAME | SPENT_OVERALL |
++------------+-----------+---------------+
+| Abhijit    | Gowda     |     112997.00 |
+| Kiran      | Raj       |      76497.00 |
+| Vinay      | Iyer      |      60998.00 |
++------------+-----------+---------------+
+
+197.WAQTD THE TOP 3 REVENUE GENERATED MONTH.
+MONTH - TOTAL_REVENUE
+
+SELECT DATE_FORMAT(O.ORDER_DATE,'%M') AS MONTH,SUM(P.PRICE) AS REVENUE
+FROM ORDERS O JOIN PRODUCT P
+ON O.PRODUCT_ID=P.PRODUCT_ID
+GROUP BY MONTH
+ORDER BY REVENUE DESC
+LIMIT 3;
++-------+-----------+
+| MONTH | REVENUE   |
++-------+-----------+
+| May   | 122495.00 |
+| July  | 108995.00 |
+| April |  95496.00 |
++-------+-----------+
+
+198.WAQTD THE TOTAL REVENUE GENERATED IN EVERY STATE.
+
+SELECT  SUM(P.PRICE) AS TOTAL_REVENUE,L.STATE
+FROM ORDERS O INNER JOIN PRODUCT P
+ON O.PRODUCT_ID=P.PRODUCT_ID INNER JOIN CUSTOMER C
+ON C.CID=O.CID INNER JOIN LOCATION L
+ON L.LID=C.LID
+GROUP BY L.STATE
+ORDER BY TOTAL_REVENUE DESC;
+
++---------------+----------------+
+| TOTAL_REVENUE | STATE          |
++---------------+----------------+
+|     249493.00 | Karnataka      |
+|     103496.00 | Kerala         |
+|      80495.00 | Tamil Nadu     |
+|      45494.00 | Telangana      |
+|      35497.00 | Andhra Pradesh |
++---------------+----------------+
+
+199.WAQTD THE TOP MOST REVENUE GENERATED FROM DISPATCHER .
+
+SELECT E1.FNAME ,SUM(P1.PRICE) TOTAL_REVENUE
+FROM EMP E1 INNER JOIN ORDERS O1
+ON E1.EID=O1.EID INNER JOIN PRODUCT P1
+ON P1.PRODUCT_ID=O1.PRODUCT_ID
+WHERE JOB='DISPATCHER'
+GROUP BY E1.FNAME,O1.EID
+ORDER BY TOTAL_REVENUE DESC
+LIMIT 1;
++---------+---------------+
+| FNAME   | TOTAL_REVENUE |
++---------+---------------+
+| Jahnavi |     247990.00 |
++---------+---------------+
+
+
+************************************************************************************
+
+OUTER JOINS
+--------------
+OUTER JOINS ARE USED TO OBTAIN THE MATCHED AND UNMATCHED RECORDS.
+
+IN OUTER JOINS WE HAVE,
+-> LEFT OUTER JOIN
+->RIGHT OUTER JOIN
+-> FULL OUTER JOIN
+
+
+LEFT OUTER JOINS
+==================
+LEFT OUTER JOINS ARE USED TO OBTAIN THE MATCHED AND THE UNMATCHED RECORDS FROM THE LEFT TABLE.
+
+SYNTAX: 
+*******
+SELECT COLUMN_NAME
+FROM TABLE_NAME T1 LEFT OUTER JOIN TABLE_NAME T2
+ON T1.COLUMN_NAME=T2.COLUMN_NAME;
+
+RIGHT OUTER JOINS
+=================
+RIGHT OUTER JOINS ARE USED TO OBTAIN THE MATCHED AND THE UNMATCHED RECORDS FROM RIGHT TABLE.
+
+SYNTAX:
+*******
+SELECT COLUMN_NAME
+FROM TABLE_NAME T1 RIGHT OUTER JOIN TABLE_NAME T2
+ON T1.COLUMN_NAME=T2.COLUMN_NAME;
+
+FULL OUTER JOINS
+================
+FULL OUTER JOINS ARE USED TO OBTAIN THE MATCHED AND THE UNMATCHED RECORDS FROM BOTH THE TABLE.
+> IT IS THE COMBINATION  OF THE BOTH LEFT OUTER JOIS AD RIGHT  OUTER JOINS.
+
+SYNTAX:
+*******
+SELECT COLUMN_NAME
+FROM TABLE_NAME T1 LEFT OUTER JOIN TABLE_NAME T2
+ON T1.COLUMN_NAME=T2.COLUMN_NAME
+UNION
+SELECT COLUMN_NAME
+FROM TABLE_NAME T1 RIGHT OUTER JOIN TABLE_NAME T2
+ON T1.COLUMN_NAME=T2.COLUMN_NAME;
+
+
+************************************************************************************
+200.WAQTD THE LOCATION NAMES WHERE NO DEPTS IS SITUATED.
+
+SELECT L.LOCATION
+FROM DEPT D RIGHT OUTER JOIN LOCATION L
+ON L.LID=D.LID
+WHERE D.LID IS NULL;
++------------------+
+| LOCATION         |
++------------------+
+| Peelamedu        |
+| Fort Kochi       |
+| Jayalakshmipuram |
+| MVP Colony       |
+| Alwarpet         |
+| Chandragiri      |
+| Kowdiar          |
+| Gadag Road       |
+| Benz Circle      |
+| Kondalampatti    |
+| Vellayambalam    |
+| Hanamkonda       |
++------------------+
+201.WAQTD THE LOCATIONS WHERE NO CUSTOMERS ARE LOCATED IN THAT AREA.
+
+SELECT L.LOCATION 
+FROM LOCATION L LEFT OUTER JOIN CUSTOMER C
+ON L.LID=C.LID
+WHERE C.LID IS NULL;
+
+Empty set (0.00 sec)
+
+202.WAQTD THE DETAILS OF  CUSTOMER WHO HAS NOT ORDER ANY PRODUCT  SO FAR
+
+SELECT C.*
+FROM CUSTOMER C LEFT OUTER JOIN ORDERS O
+ON C.CID=O.CID
+WHERE O.CID IS  NULL;
++-----+------------+-----------+------+
+| CID | FIRST_NAME | LAST_NAME | LID  |
++-----+------------+-----------+------+
+| 504 | Arjun      | Singh     |  212 |
+| 513 | Anand      | Bhat      |  207 |
+| 516 | Sita       | Pillai    |  205 |
+| 517 | Mohan      | Nambiar   |  201 |
+| 518 | Neha       | Varma     |  214 |
+| 519 | Karthik    | Menon     |  213 |
+| 520 | Riya       | Iyer      |  208 |
++-----+------------+-----------+------+
+
+***********************************************************************************
+NATURAL JOIN
+============
+> NATURAL JOINS ARE USED TO OBTAIN THE MATCHED RECORDS BY IDENTIFYING THE COMMON COLUMN NAME PRESENT IN BOTH TABLE.
+> HERE, NATURAL JOINS DEPENDS ON THE COLUMN NAME FOR MERGING TWO TABLES.
+> THE COMMON COLUMN WILL BE DISPLAYED FIRST IN THE TABLE AND ONLY
+
+************************************************************************************
+TCL(TRANSACTION CONTROL LANGUAGE) 
+==================================
+> COMMIT
+> SAVEPOINT
+> ROLLBACK
+
+COMMIT
+--------
+>IT IS USED SAVE THE DATA IN THE DATABASE PERMANENTLY.
+SYNTAX: COMMIT;
+
+NOTE : TO DISABLE AUTO COMMIT IN MYSQL, WE USE  
+SET AUTOCOMMIT=0;
+
+ROLLBACK:IT IS USED TO ROLL OUT ALL THE TRANSACTIONS UNTIL THE PREVIOUSLY USED COMMIT STATEMENT.
+
+SYNTAX: ROLLBACK;
+
+> WE CAN ALSO ROLLBACK UPTO A CERTAIN SAVEPOINT.
+SYNTAX: ROLLBACK TO SAVEPOINT_NAME;
+
+SAVEPOINT: IT IS USED TO MARK A POINT IN THE MIDDLE OF THE TRANSACTION.
+
+SYNTAX:SAVEPOINT SAVEPOINT_NAME; 
+
+*************************************************************************************
+
+CREATION OF USERS
+------------------
+CREATE USER 'USERNAME'@'LOCALHOST IDENTIFIED BY 'PASSWORD';
+
+CREATE USER 'AKANKSH'@'LOCALHOST'IDENTIFIED BY 'MYSQL';
+
+PATH
+====
+> CD C:\Program Files\MySQL\MySQL Server 8.0\bin
+
+************************************************************************************
+
+DCL(DATA CNTROL LANGUAGE)
+=========================
+GRANT : THIS STATEMENT  IS USED TO GRANT THE PERMISSION TO ACCESS THE  DATA FOR THE OTHER USER.
+
+SYNTAX: GRANT SQL1_STATEMENT ON TABLE_NAME
+        TO USER_NAME@LOCALHOST;
+
+REVOKE: THIS STATEMENT IS USED TO RETRIVE THE PERMISSION TO GIVEN TO ACCESS FORMTHE OTHER USER.
+
+SYNTAX: REVOKE SQL1_STATEMENT ON TABLE_NAME
+        TO USER_NAME@LOCALHOST;
+

@@ -1,0 +1,54 @@
+CREATE TABLE EMPLOYEE(
+ID INT PRIMARY KEY,
+NAME VARCHAR(20) NOT NULL,
+JOB_ROLE VARCHAR(20),
+SAL DECIMAL(10,3)
+);
+
+
+
+
+delimiter//
+
+create procedure add_employee(in eid int,in name varchar(20),in job_role varchar(10),in sal decimal(10,3))
+BEGIN
+insert into employee values(eid,name,job_role,sal);
+SELECT "DATA ADDED SUCESSFULLY";
+select * from employee;
+end
+//
+
+
+CALL ADD_EMPLOYEE(1,'VARUN','JAV_DEV',5000);
+CALL ADD_EMPLOYEE(2,'SHARDHA','SQL_DEV',10000);
+
+
+
+TRIGGERS
+************************************************************************
+TRIGGER ARE THE ACTION PEROFORMED BY IMPLICIT EXECUTION FROM THE SERVER WHENEVER DDL OR DML ACTIVITY TAKEN PLACE.
+> TRIGGER CAN BE IMPLEMENTED FOR DML OR DDL.
+
+SYNTAX:
+DELIMITER //
+CREATE TRIGGER TRIGGER_NAME BEFORE|AFTER|INSTEAD OF INSERT|DELETE|UPDATE ON TABLE_NAME
+BEGIN
+---QUERY
+END
+//
+
+
+CREATE TABLE RECORDS(
+SLNO INT PRIMARY KEY AUTO_INCREMENT,
+EID INT,
+DOJ DATETIME,
+EXPENSES DECIMAL(10,3)
+);
+
+
+delimiter //
+create trigger emp_records after insert on employee for each row 
+begin
+insert into records(eid,doj,expenses)values(new.id,sysdate(),new.sal);
+end
+//
